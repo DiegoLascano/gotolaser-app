@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:go_to_laser_store/models/image_model.dart';
+
 Category categoryFromJson(String str) => Category.fromJson(json.decode(str));
 
 String categoryToJson(Category data) => json.encode(data.toJson());
@@ -40,18 +42,18 @@ class Category {
       };
 }
 
-class Image {
-  Image({
-    this.url,
-  });
-
-  String url;
-
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
-        url: json["src"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "src": url,
-      };
-}
+// class Image {
+//   Image({
+//     this.url,
+//   });
+//
+//   String url;
+//
+//   factory Image.fromJson(Map<String, dynamic> json) => Image(
+//         url: json["src"],
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "src": url,
+//       };
+// }

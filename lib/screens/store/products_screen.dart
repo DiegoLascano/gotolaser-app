@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_to_laser_store/config.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
+import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:go_to_laser_store/widgets/store/category_card_widget.dart';
+import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
+import 'package:go_to_laser_store/widgets/store/section_title_widget.dart';
 import 'package:provider/provider.dart';
 
 class ProductsScreen extends StatelessWidget {
@@ -24,12 +28,13 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        children: [
-          _buildHeader(),
-          _buildContent(),
-        ],
-      )),
+        child: Column(
+          children: [
+            _buildHeader(),
+            _buildContent(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -45,41 +50,31 @@ class ProductsScreen extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Expanded(
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _buildTitle('Categorías', 'Descr', 'Ver Mas'),
+              SectionTitle(title: 'Categorías'),
               _buildCategories(),
+              SizedBox(height: 10),
+              SectionTitle(
+                title: 'Los más vendidos',
+                description: 'Mira lo que más le gusta a las personas',
+                linkText: 'Ver más',
+              ),
+              _buildProducts(Config.topSellingTagId),
+              SizedBox(height: 10),
+              SectionTitle(
+                title: 'Oferta',
+                description: 'Mira nuestras últimas ofertas',
+                linkText: 'Ver más',
+              ),
+              _buildProducts(Config.offerTagId)
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTitle(String title, [String description, String linkText]) {
-    return Container(
-      decoration: BoxDecoration(color: Colors.amberAccent),
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title),
-              linkText != null
-                  ? InkWell(
-                      child: Text(linkText),
-                      onTap: () {},
-                    )
-                  : SizedBox(width: 0),
-            ],
-          ),
-          description != null ? Text(description) : SizedBox(height: 0),
-        ],
       ),
     );
   }
@@ -91,21 +86,64 @@ class ProductsScreen extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<List<Category>> categoriesList) {
         if (categoriesList.hasData) {
           final categories = categoriesList.data;
-          return Container(
-            height: 125,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    CategoryCard(category: categories[index]),
-                    SizedBox(width: 10)
-                  ],
-                );
-              },
-            ),
+          if (categories != null) {
+            return Container(
+              height: 125,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      CategoryCard(category: categories[index]),
+                      SizedBox(width: 10)
+                    ],
+                  );
+                },
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
           );
+        }
+      },
+    );
+  }
+
+  Widget _buildProducts(String tagId) {
+    return FutureBuilder(
+      future: woocommerce.getProducts(tagId),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<Product>> productsList) {
+        if (productsList.hasData) {
+          final products = productsList.data;
+          if (products != null) {
+            return Container(
+              height: 125,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      ProductCard(product: products[index]),
+                      SizedBox(width: 10)
+                    ],
+                  );
+                },
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         } else {
           return Center(
             child: CircularProgressIndicator(),
