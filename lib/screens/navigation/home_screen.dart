@@ -5,7 +5,7 @@ import 'package:go_to_laser_store/screens/account/account_screen.dart';
 import 'package:go_to_laser_store/screens/cart/cart_screen.dart';
 import 'package:go_to_laser_store/screens/navigation/cupertino_home_scaffold.dart';
 import 'package:go_to_laser_store/screens/navigation/tab_item.dart';
-import 'package:go_to_laser_store/screens/store/products_screen.dart';
+import 'package:go_to_laser_store/screens/store/store_home_screen.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Map<TabItem, WidgetBuilder> get widgetBuilders {
     return {
-      TabItem.store: (_) => ProductsScreen.create(context),
+      TabItem.store: (_) => StoreHomeScreen.create(context),
       TabItem.loved: (context) => Container(),
       TabItem.cart: (_) => CartScreen(),
       TabItem.account: (_) => AccountScreen(),

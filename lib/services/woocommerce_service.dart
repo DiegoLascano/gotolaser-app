@@ -9,7 +9,15 @@ import 'package:go_to_laser_store/models/product_model.dart';
 
 abstract class WoocommerceServiceBase {
   Future<List<Category>> getCategories();
-  Future<List<Product>> getProducts(String tagId);
+  Future<List<Product>> getProducts({
+    int pageNumber,
+    int pageSize,
+    String strSearch,
+    String tagId,
+    String categoryId,
+    String sortBy,
+    String sortOrder = "asc",
+  });
 }
 
 class WoocommerceService extends WoocommerceServiceBase {
@@ -41,11 +49,28 @@ class WoocommerceService extends WoocommerceServiceBase {
   }
 
   @override
-  Future<List<Product>> getProducts(String tagId) async {
+  Future<List<Product>> getProducts({
+    int pageNumber,
+    int pageSize,
+    String strSearch,
+    String tagId,
+    String categoryId,
+    String sortBy,
+    String sortOrder = "asc",
+  }) async {
     List<Product> products = List<Product>();
+    String params = '';
+    if (strSearch != null) params += "&search=$strSearch";
+    if (pageSize != null) params += "&per_page=$pageSize";
+    if (pageNumber != null) params += "&page=$pageNumber";
+    if (tagId != null) params += "&tag=$tagId";
+    if (categoryId != null) params += "&category=$categoryId";
+    if (sortBy != null) params += "&orderby=$sortBy";
+    if (sortOrder != null) params += "&order=$sortOrder";
+
     String url = Config.baseUrl +
         Config.productsUrl +
-        "?consumer_key=${Config.consumerKey}&consumer_secret=${Config.consumerSecret}&tag=$tagId";
+        "?consumer_key=${Config.consumerKey}&consumer_secret=${Config.consumerSecret}${params.toString()}";
 
     try {
       var response = await Dio().get(url,
@@ -59,7 +84,7 @@ class WoocommerceService extends WoocommerceServiceBase {
             )
             .toList();
       }
-      // print(products[0].name);
+      print("products fetched: ${products.length}");
     } on DioError catch (e) {
       print(e.response);
     }
