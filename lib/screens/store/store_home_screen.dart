@@ -39,29 +39,35 @@ class StoreHomeScreen extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SectionTitle(title: 'Categorías'),
-            _buildCategories(),
-            SizedBox(height: 10),
-            SectionTitle(
-              title: 'Los más vendidos',
-              description: 'Mira lo que más le gusta a las personas',
-              linkText: 'Ver más',
-            ),
-            _buildProducts(Config.topSellingTagId),
-            SizedBox(height: 10),
-            SectionTitle(
-              title: 'Oferta',
-              description: 'Mira nuestras últimas ofertas',
-              linkText: 'Ver más',
-            ),
-            _buildProducts(Config.offerTagId)
-          ],
+    return ListView(
+      children: [
+        _buildBanner(),
+        SectionTitle(title: 'Categorías'),
+        _buildCategories(),
+        SizedBox(height: 20),
+        SectionTitle(
+          title: 'Los más vendidos',
+          description: 'Mira lo que más le gusta a las personas',
+          linkText: 'Ver más',
         ),
+        _buildProducts(Config.topSellingTagId),
+        SizedBox(height: 20),
+        SectionTitle(
+          title: 'Oferta',
+          description: 'Mira nuestras últimas ofertas',
+          linkText: 'Ver más',
+        ),
+        _buildProducts(Config.offerTagId)
+      ],
+    );
+  }
+
+  // TODO: add promotion banner using carousel
+  Widget _buildBanner() {
+    return Container(
+      height: 200,
+      child: Center(
+        child: Text('Banner de promociones'),
       ),
     );
   }
@@ -75,15 +81,15 @@ class StoreHomeScreen extends StatelessWidget {
           final categories = categoriesList.data;
           if (categories != null) {
             return Container(
-              height: 125,
+              height: 140,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   return Row(
                     children: [
+                      SizedBox(width: 10),
                       CategoryCard(category: categories[index]),
-                      SizedBox(width: 10)
                     ],
                   );
                 },
@@ -105,25 +111,26 @@ class StoreHomeScreen extends StatelessWidget {
 
   Widget _buildProducts(String tagId) {
     return FutureBuilder(
-      future: woocommerce.getProducts(tagId: tagId),
+      future: woocommerce.getProducts(tagId: tagId, pageSize: 6),
       builder:
           (BuildContext context, AsyncSnapshot<List<Product>> productsList) {
         if (productsList.hasData) {
           final products = productsList.data;
           if (products != null) {
             return Container(
-              height: 125,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      ProductThumbnail(product: products[index]),
-                      SizedBox(width: 10)
-                    ],
-                  );
-                },
+              padding: EdgeInsets.all(10),
+              child: GridView.count(
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                scrollDirection: Axis.vertical,
+                crossAxisCount: 2,
+                childAspectRatio: 1.15,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: products
+                    .map(
+                        (Product product) => ProductThumbnail(product: product))
+                    .toList(),
               ),
             );
           } else {

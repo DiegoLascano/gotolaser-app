@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SectionTitle extends StatelessWidget {
@@ -15,25 +16,33 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Colors.amberAccent),
-      padding: EdgeInsets.symmetric(vertical: 10),
+      // decoration: BoxDecoration(color: Colors.amberAccent),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title),
+              Text(title, style: Theme.of(context).textTheme.subtitle1),
               linkText != null
                   ? InkWell(
-                      child: Text(linkText),
+                      child: Text(
+                        linkText,
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
                       onTap: () {},
                     )
                   : SizedBox(width: 0),
             ],
           ),
           SizedBox(height: 5),
-          description != null ? Text(description) : SizedBox(height: 0),
+          description != null
+              ? Text(
+                  description,
+                  style: Theme.of(context).textTheme.bodyText1,
+                )
+              : SizedBox(height: 0),
         ],
       ),
     );

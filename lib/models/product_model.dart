@@ -5,6 +5,7 @@
 import 'dart:convert';
 import 'package:go_to_laser_store/models/category_model.dart';
 import 'package:go_to_laser_store/models/image_model.dart';
+import 'package:go_to_laser_store/models/tag_model.dart';
 
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
@@ -21,8 +22,11 @@ class Product {
     this.regularPrice,
     this.salePrice,
     this.stockStatus,
+    this.averageRating,
+    this.ratingCount,
     this.images,
     this.categories,
+    this.tags,
   });
 
   int id;
@@ -34,8 +38,11 @@ class Product {
   String regularPrice;
   String salePrice;
   String stockStatus;
+  String averageRating;
+  int ratingCount;
   List<Image> images;
   List<Category> categories;
+  List<Tag> tags;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
@@ -45,11 +52,16 @@ class Product {
         sku: json["sku"],
         price: json["price"],
         regularPrice: json["regular_price"],
-        salePrice: json["sale_price"],
+        salePrice: json["sale_price"] != ""
+            ? json["sale_price"]
+            : json["regular_price"], // line modified by developer
         stockStatus: json["stock_status"],
+        averageRating: json["average_rating"],
+        ratingCount: json["rating_count"],
         images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
         categories: List<Category>.from(
             json["categories"].map((x) => Category.fromJson(x))),
+        tags: List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -62,9 +74,22 @@ class Product {
         "regular_price": regularPrice,
         "sale_price": salePrice,
         "stock_status": stockStatus,
+        "average_rating": averageRating,
+        "rating_count": ratingCount,
         "images": List<Image>.from(images.map((x) => x.toJson())),
         "categories": List<Category>.from(categories.map((x) => x.toJson())),
+        "tags": List<Tag>.from(tags.map((x) => x.toJson())),
       };
+
+  calculateDiscount() {
+    double regularPrice = double.parse(this.regularPrice);
+    double salePrice =
+        this.salePrice != "" ? double.parse(this.salePrice) : regularPrice;
+    double discount = regularPrice - salePrice;
+    double percentDiscount = (discount / regularPrice) * 100;
+
+    return percentDiscount.round();
+  }
 }
 //
 // class Category {
