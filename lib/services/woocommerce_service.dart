@@ -15,6 +15,7 @@ abstract class WoocommerceServiceBase {
     String strSearch,
     String tagId,
     String categoryId,
+    List<int> productsIds,
     String sortBy,
     String sortOrder = "asc",
   });
@@ -55,6 +56,7 @@ class WoocommerceService extends WoocommerceServiceBase {
     String strSearch,
     String tagId,
     String categoryId,
+    List<int> productsIds,
     String sortBy,
     String sortOrder = "asc",
   }) async {
@@ -64,6 +66,8 @@ class WoocommerceService extends WoocommerceServiceBase {
     if (pageSize != null) params += "&per_page=$pageSize";
     if (pageNumber != null) params += "&page=$pageNumber";
     if (tagId != null) params += "&tag=$tagId";
+    if (productsIds != null)
+      params += "&include=${productsIds.join(",").toString()}";
     if (categoryId != null) params += "&category=$categoryId";
     if (sortBy != null) params += "&orderby=$sortBy";
     if (sortOrder != null) params += "&order=$sortOrder";

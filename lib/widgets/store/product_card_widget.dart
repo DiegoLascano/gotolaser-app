@@ -51,7 +51,7 @@ class ProductCard extends StatelessWidget {
             imageUrl: product.images[0]?.url ?? null,
           ),
         ),
-        product.calculateDiscount() > 0
+        product.onSale
             ? Positioned(
                 top: 5,
                 left: 5,
@@ -123,7 +123,7 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildDiscountBadge(Product product) {
-    return product.calculateDiscount() > 0
+    return product.onSale
         ? Container(
             height: 24,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),

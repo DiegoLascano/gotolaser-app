@@ -6,6 +6,7 @@ import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
 import 'package:go_to_laser_store/widgets/store/product_rating_widget.dart';
+import 'package:go_to_laser_store/widgets/store/related_products_widget.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({
@@ -25,6 +26,7 @@ class ProductScreen extends StatelessWidget {
           children: [
             _buildHeader(context),
             _buildContent(context),
+            _buildRelatedProducts(context)
           ],
         ),
       ),
@@ -68,7 +70,7 @@ class ProductScreen extends StatelessWidget {
               ),
             ),
           ),
-          product.calculateDiscount() > 0
+          product.onSale
               ? Positioned(
                   top: 25,
                   right: 25,
@@ -126,7 +128,7 @@ class ProductScreen extends StatelessWidget {
                     width: 10,
                   ),
                   Visibility(
-                    visible: product.calculateDiscount() > 0,
+                    visible: product.onSale,
                     child: Text(
                       '\$${product.regularPrice}  ',
                       style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -142,7 +144,7 @@ class ProductScreen extends StatelessWidget {
             ],
           ),
           Visibility(
-            visible: discount > 0,
+            visible: product.onSale,
             child: Text(
               'Ahorras \$$savings ($discount%)',
               style: Theme.of(context)
@@ -152,6 +154,11 @@ class ProductScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 5),
+          Text(
+            'Código: ${product.sku}',
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          SizedBox(height: 5),
           Divider(thickness: 1),
           SizedBox(height: 5),
           ExpandablePanel(
@@ -159,6 +166,7 @@ class ProductScreen extends StatelessWidget {
               'Descripción del producto',
               style: Theme.of(context).textTheme.subtitle2.copyWith(
                     fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
                   ),
             ),
             expanded: Text(
@@ -173,6 +181,7 @@ class ProductScreen extends StatelessWidget {
               'Detalles de envío',
               style: Theme.of(context).textTheme.subtitle2.copyWith(
                     fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
                   ),
             ),
             expanded: Text(
@@ -191,6 +200,7 @@ class ProductScreen extends StatelessWidget {
                   'Comentarios',
                   style: Theme.of(context).textTheme.subtitle2.copyWith(
                         fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
                       ),
                 ),
                 SizedBox(width: 10),
@@ -198,8 +208,29 @@ class ProductScreen extends StatelessWidget {
               ],
             ),
           ),
+          Divider(thickness: 1),
         ],
       ),
+    );
+  }
+
+  Widget _buildRelatedProducts(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            'Productos que te pueden interesar',
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
+        ),
+        SizedBox(height: 10),
+        RelatedProducts.create(context, product)
+      ],
     );
   }
 }

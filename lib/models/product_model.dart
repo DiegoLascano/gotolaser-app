@@ -21,12 +21,15 @@ class Product {
     this.price,
     this.regularPrice,
     this.salePrice,
+    this.onSale,
     this.stockStatus,
     this.averageRating,
     this.ratingCount,
     this.images,
     this.categories,
     this.tags,
+    this.upsellIDs,
+    this.crossSellIDs,
   });
 
   int id;
@@ -37,12 +40,15 @@ class Product {
   String price;
   String regularPrice;
   String salePrice;
+  bool onSale;
   String stockStatus;
   String averageRating;
   int ratingCount;
   List<Image> images;
   List<Category> categories;
   List<Tag> tags;
+  List<int> upsellIDs;
+  List<int> crossSellIDs;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
@@ -55,6 +61,7 @@ class Product {
         salePrice: json["sale_price"] != ""
             ? json["sale_price"]
             : json["regular_price"], // line modified by developer
+        onSale: json["on_sale"],
         stockStatus: json["stock_status"],
         averageRating: json["average_rating"],
         ratingCount: json["rating_count"],
@@ -62,6 +69,8 @@ class Product {
         categories: List<Category>.from(
             json["categories"].map((x) => Category.fromJson(x))),
         tags: List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
+        upsellIDs: List<int>.from(json["upsell_ids"].map((x) => x)),
+        crossSellIDs: List<int>.from(json["cross_sell_ids"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -73,12 +82,15 @@ class Product {
         "price": price,
         "regular_price": regularPrice,
         "sale_price": salePrice,
+        "on_sale": onSale,
         "stock_status": stockStatus,
         "average_rating": averageRating,
         "rating_count": ratingCount,
         "images": List<Image>.from(images.map((x) => x.toJson())),
         "categories": List<Category>.from(categories.map((x) => x.toJson())),
         "tags": List<Tag>.from(tags.map((x) => x.toJson())),
+        "upsell_ids": List<dynamic>.from(upsellIDs.map((x) => x)),
+        "cross_sell_ids": List<dynamic>.from(crossSellIDs.map((x) => x)),
       };
 
   calculateDiscount() {
