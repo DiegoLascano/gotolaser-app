@@ -26,7 +26,7 @@ class ProductScreen extends StatelessWidget {
           children: [
             _buildHeader(context),
             _buildContent(context),
-            _buildRelatedProducts(context)
+            RelatedProducts.create(context, product)
           ],
         ),
       ),
@@ -211,26 +211,6 @@ class ProductScreen extends StatelessWidget {
           Divider(thickness: 1),
         ],
       ),
-    );
-  }
-
-  Widget _buildRelatedProducts(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            'Productos que te pueden interesar',
-            style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-        ),
-        SizedBox(height: 10),
-        RelatedProducts.create(context, product)
-      ],
     );
   }
 }

@@ -29,6 +29,33 @@ class RelatedProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Visibility(
+      visible: product.crossSellIDs.isNotEmpty,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTitle(context),
+          SizedBox(height: 10),
+          _buildGrid(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Text(
+        'Productos que te pueden interesar',
+        style: Theme.of(context).textTheme.subtitle2.copyWith(
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+            ),
+      ),
+    );
+  }
+
+  Widget _buildGrid() {
     return FutureBuilder(
       future: woocommerce.getProducts(productsIds: product.crossSellIDs),
       builder:

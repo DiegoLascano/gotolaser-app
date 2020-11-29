@@ -88,7 +88,7 @@ class WoocommerceService extends WoocommerceServiceBase {
             )
             .toList();
       }
-      print("products fetched: ${products.length}");
+      // print("products fetched: ${products.length}");
     } on DioError catch (e) {
       print(e.response);
     }

@@ -6,13 +6,24 @@ import 'package:go_to_laser_store/screens/auth/signin_screen.dart';
 import 'package:go_to_laser_store/screens/auth_check_screen.dart';
 import 'package:go_to_laser_store/screens/navigation/home_screen.dart';
 import 'package:go_to_laser_store/screens/store/products_screen.dart';
+import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'package:go_to_laser_store/screens/auth/auth_home_screen.dart';
 import 'package:go_to_laser_store/services/auth_service.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MyApp()
+    // MultiProvider(
+    //   providers: [
+    //     ChangeNotifierProvider(create: (_) => ProductsProvider()),
+    //     Provider(
+    //       create: (_) => WoocommerceService(),
+    //     )
+    //   ],
+    //   child: MyApp(),
+    // ),
+    );
 
 class MyApp extends StatelessWidget {
   @override
@@ -20,9 +31,7 @@ class MyApp extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => ProductsProvider(),
-        ),
+        ChangeNotifierProvider(create: (_) => ProductsProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
