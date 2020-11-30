@@ -10,11 +10,13 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FlatButton(
-        child: Text('test screen'),
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => TestScreen.create(context, 20.toString()),
+      body: SafeArea(
+        child: FlatButton(
+          child: Text('test screen'),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TestScreen.create(context, 17.toString()),
+            ),
           ),
         ),
       ),
