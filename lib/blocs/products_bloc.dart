@@ -3,7 +3,8 @@ import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-// TODO: check ordering on prices, it is not working
+// TODO: check ordering on prices, it is not working properly
+// TODO: move isLoading to ValueNotifier<bool> to reduce code. First attempt failed
 
 class SortBy {
   SortBy(this.value, this.text, this.sortOrder);
@@ -65,8 +66,8 @@ class ProductsBloc {
           _newProductsList.addAll(_fetchedProducts);
           return changeProductsList(_newProductsList);
         } else {
-          /// This line does nothing, that is the expected behavior
-          return _fetchedProducts;
+          /// This line does nothing, it is the expected behavior
+          return [];
         }
       }
       return changeProductsList(_fetchedProducts);

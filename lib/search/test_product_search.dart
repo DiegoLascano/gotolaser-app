@@ -3,8 +3,8 @@ import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
 import 'package:go_to_laser_store/widgets/store/search_card_widget.dart';
 
-class ProductsSearch extends SearchDelegate<Product> {
-  ProductsSearch(this.products);
+class TestProductsSearch extends SearchDelegate<Product> {
+  TestProductsSearch(this.products);
   final Stream<List<Product>> products;
 
   @override

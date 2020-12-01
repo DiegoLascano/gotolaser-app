@@ -11,7 +11,6 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(category.image?.url);
     return GestureDetector(
       child: Column(
         children: [

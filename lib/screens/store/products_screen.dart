@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/providers/products_provider.dart';
+import 'package:go_to_laser_store/search/products_search.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
 import 'package:provider/provider.dart';
@@ -45,8 +46,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   // TODO: check 'setState' error after ProductsProvider was added.
   int _page = 1;
   ScrollController _scrollController = ScrollController();
-  final _searchQueryController = TextEditingController();
-  Timer _debounce;
 
   final _sortByOptions = [
     SortBy("popularity", "El más popular", "asc"),
@@ -54,18 +53,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     SortBy("price", "Mayor precio", "desc"),
     SortBy("price", "Menor precio", "asc"),
   ];
-
-  void _onSearchQuery() {
-    if (_debounce?.isActive ?? false) _debounce.cancel();
-
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      widget.productsProvider.resetStreams();
-      widget.productsProvider.setLoadingState(LoadMoreStatus.INITIAL);
-      widget.productsProvider.fetchProducts(_page,
-          categoryId: widget.categoryId,
-          strSearch: _searchQueryController.text);
-    });
-  }
 
   @override
   void initState() {
@@ -80,7 +67,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
             .fetchProducts(++_page, categoryId: widget.categoryId);
       }
     });
-    _searchQueryController.addListener(_onSearchQuery);
     super.initState();
   }
 
@@ -90,6 +76,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('GoTo Láser'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: ProductsSearch(widget.productsProvider.allProducts),
+              );
+            },
+          ),
+          _buildFilterAction(),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
@@ -97,7 +95,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           children: [
             Column(
               children: [
-                _buildFilters(),
+                // _buildFilters(),
                 Flexible(child: _buildContent()),
               ],
             ),
@@ -132,57 +130,30 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _buildFilters() {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      height: 50,
-      child: Row(
-        children: [
-          Flexible(
-            child: TextField(
-              controller: _searchQueryController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: greySwatch.shade900,
-                ),
-                hintText: 'Busca el artículo que necesitas',
-                hintStyle: Theme.of(context).textTheme.bodyText1,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide(color: greySwatch.shade200),
-                ),
-                fillColor: Colors.white,
-                filled: true,
+  Widget _buildFilterAction() {
+    return PopupMenuButton(
+      onSelected: (sortBy) {
+        widget.productsProvider.resetStreams();
+        widget.productsProvider.setSortOrder(sortBy);
+        widget.productsProvider
+            .fetchProducts(_page, categoryId: widget.categoryId);
+      },
+      itemBuilder: (BuildContext context) {
+        return _sortByOptions.map((option) {
+          return PopupMenuItem(
+            value: option,
+            child: Container(
+              child: Text(
+                option.text,
+                style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
-          ),
-          SizedBox(width: 15),
-          Container(
-            child: PopupMenuButton(
-              onSelected: (sortBy) {
-                widget.productsProvider.resetStreams();
-                widget.productsProvider.setSortOrder(sortBy);
-                widget.productsProvider
-                    .fetchProducts(_page, categoryId: widget.categoryId);
-              },
-              itemBuilder: (BuildContext context) {
-                return _sortByOptions.map((option) {
-                  return PopupMenuItem(
-                    value: option,
-                    child: Container(
-                      child: Text(option.text),
-                    ),
-                  );
-                }).toList();
-              },
-              icon: Icon(
-                Icons.filter_list,
-                color: greySwatch.shade900,
-              ),
-            ),
-          ),
-        ],
+          );
+        }).toList();
+      },
+      icon: Icon(
+        Icons.filter_list,
+        // color: greySwatch.shade900,
       ),
     );
   }
