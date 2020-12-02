@@ -76,6 +76,7 @@ class WoocommerceService extends WoocommerceServiceBase {
         Config.productsUrl +
         "?consumer_key=${Config.consumerKey}&consumer_secret=${Config.consumerSecret}${params.toString()}";
 
+    print(url);
     try {
       var response = await Dio().get(url,
           options: Options(

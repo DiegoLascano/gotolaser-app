@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/providers/products_provider.dart';
-import 'package:go_to_laser_store/search/products_search.dart';
+import 'package:go_to_laser_store/search/products_search_delegate.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +84,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: ProductsSearch(widget.productsProvider.allProducts),
+                delegate:
+                    ProductsSearchDelegate(catergoryId: widget.categoryId),
               );
             },
           ),
