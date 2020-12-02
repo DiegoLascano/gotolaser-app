@@ -10,6 +10,7 @@ class SortBy {
   String sortOrder;
 }
 
+// TODO: refactor LoadMoreStatus related names to something less ugly (LoadingState)
 enum LoadMoreStatus { INITIAL, LOADING, STABLE }
 
 class ProductsProvider with ChangeNotifier {
@@ -46,10 +47,12 @@ class ProductsProvider with ChangeNotifier {
   }
 
   fetchProducts(
-    pageNumber, {
+    int pageNumber, {
+    int pageSize,
     String strSearch,
     String tagId,
     String categoryId,
+    List<int> productsIds,
     String sortBy,
     String sortOrder = "asc",
   }) async {
@@ -58,7 +61,8 @@ class ProductsProvider with ChangeNotifier {
       tagId: tagId,
       categoryId: categoryId,
       pageNumber: pageNumber,
-      pageSize: this.pageSize,
+      productsIds: productsIds,
+      pageSize: pageSize ?? this.pageSize,
       sortBy: this._sortBy.value,
       sortOrder: this._sortBy.sortOrder,
     );

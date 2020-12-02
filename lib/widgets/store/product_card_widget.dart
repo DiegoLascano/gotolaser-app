@@ -17,7 +17,7 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProductScreen(product: product),
+          builder: (context) => ProductScreen.create(context, product),
         ),
       ),
       child: Container(
@@ -136,13 +136,17 @@ class ProductCard extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: '\$${product.regularPrice}  ',
+                    text: product.type == 'variable'
+                        ? ''
+                        : '\$${product.regularPrice}  ',
                     style: TextStyle(
                         color: Colors.green[900],
                         decoration: TextDecoration.lineThrough),
                   ),
                   TextSpan(
-                    text: '(${product.calculateDiscount()}% desc.)',
+                    text: product.type == 'variable'
+                        ? 'Múltiples descuentos'
+                        : '(${product.calculateDiscount()}% desc.)',
                     style: TextStyle(
                       color: Colors.green[900],
                     ),

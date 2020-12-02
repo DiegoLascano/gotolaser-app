@@ -10,6 +10,8 @@ import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
 import 'package:provider/provider.dart';
 
+// TODO: add skeleton loading to this screen
+// TODO: handle error and empty content screen
 class ProductsScreen extends StatefulWidget {
   ProductsScreen({
     Key key,

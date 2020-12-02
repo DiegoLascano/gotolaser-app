@@ -14,7 +14,7 @@ class SearchCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProductScreen(product: product),
+          builder: (context) => ProductScreen.create(context, product),
         ),
       ),
       child: Container(

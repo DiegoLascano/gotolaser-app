@@ -1,8 +1,10 @@
 // import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:go_to_laser_store/screens/about/about_home_screen.dart';
 
 import 'package:go_to_laser_store/screens/account/account_screen.dart';
 import 'package:go_to_laser_store/screens/cart/cart_screen.dart';
+import 'package:go_to_laser_store/screens/coupons/coupons_home_screen.dart';
 import 'package:go_to_laser_store/screens/navigation/cupertino_home_scaffold.dart';
 import 'package:go_to_laser_store/screens/navigation/tab_item.dart';
 import 'package:go_to_laser_store/screens/store/store_home_screen.dart';
@@ -27,17 +29,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItem.store: GlobalKey<NavigatorState>(),
-    TabItem.loved: GlobalKey<NavigatorState>(),
-    TabItem.cart: GlobalKey<NavigatorState>(),
-    TabItem.account: GlobalKey<NavigatorState>(),
+    TabItem.coupons: GlobalKey<NavigatorState>(),
+    TabItem.about: GlobalKey<NavigatorState>(),
   };
 
   Map<TabItem, WidgetBuilder> get widgetBuilders {
     return {
       TabItem.store: (_) => StoreHomeScreen.create(context),
-      TabItem.loved: (context) => Container(),
-      TabItem.cart: (_) => CartScreen(),
-      TabItem.account: (_) => AccountScreen(),
+      TabItem.coupons: (context) => CouponsHomeScreen(),
+      TabItem.about: (context) => AboutHomeScreen(),
+      // TabItem.loved: (context) => Container(),
+      // TabItem.cart: (_) => CartScreen(),
+      // TabItem.account: (_) => AccountScreen(),
     };
   }
 

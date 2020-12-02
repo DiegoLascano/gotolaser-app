@@ -15,6 +15,8 @@ class RelatedProducts extends StatelessWidget {
   final Product product;
   final WoocommerceService woocommerce;
 
+  // TODO: add ProductsProvider()
+  // TODO: change futures to fetch data from Provider instead from Woocommerce service
   static Widget create(BuildContext context, Product product) {
     return Provider<WoocommerceServiceBase>(
       create: (_) => WoocommerceService(),

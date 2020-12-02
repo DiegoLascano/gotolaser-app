@@ -9,6 +9,10 @@ import 'package:go_to_laser_store/widgets/store/product_thumbnail_widget.dart';
 import 'package:go_to_laser_store/widgets/store/section_title_widget.dart';
 import 'package:provider/provider.dart';
 
+// TODO: add PullToRefresh feature to this screen
+// TODO: activate AdMob service and place one or more nativeAds
+// TODO: add skeleton loading to this screen
+// TODO: handle error and empty content screen????
 class StoreHomeScreen extends StatelessWidget {
   const StoreHomeScreen({Key key, @required this.woocommerce})
       : super(key: key);

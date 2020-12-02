@@ -1,11 +1,10 @@
-// import 'dart:io';
-
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:go_to_laser_store/config.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
+import 'package:go_to_laser_store/models/product_variation_model.dart';
 
 abstract class WoocommerceServiceBase {
   Future<List<Category>> getCategories();
@@ -19,6 +18,7 @@ abstract class WoocommerceServiceBase {
     String sortBy,
     String sortOrder = "asc",
   });
+  Future<List<ProductVariation>> getVariableProduct(int productId);
 }
 
 class WoocommerceService extends WoocommerceServiceBase {
@@ -93,5 +93,32 @@ class WoocommerceService extends WoocommerceServiceBase {
       print(e.response);
     }
     return products;
+  }
+
+  @override
+  Future<List<ProductVariation>> getVariableProduct(int productId) async {
+    List<ProductVariation> variableProducts;
+
+    String url = Config.baseUrl +
+        Config.productsUrl +
+        "/${productId.toString()}/${Config.variableProductsUrl}" +
+        "?consumer_key=${Config.consumerKey}&consumer_secret=${Config.consumerSecret}";
+
+    try {
+      var response = await Dio().get(url,
+          options: Options(
+              headers: {HttpHeaders.contentTypeHeader: "application/json"}));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        variableProducts = (response.data as List)
+            .map(
+              (variableProduct) => ProductVariation.fromJson(variableProduct),
+            )
+            .toList();
+      }
+    } on DioError catch (e) {
+      print(e.response);
+    }
+    return variableProducts;
   }
 }

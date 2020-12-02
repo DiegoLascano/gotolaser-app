@@ -6,6 +6,7 @@ class Config {
   static String customerUrl = 'customers';
   static String categoriesUrl = 'products/categories';
   static String productsUrl = 'products';
+  static String variableProductsUrl = 'variations';
   static String offerTagId = '29';
   static String topSellingTagId = '28';
 }

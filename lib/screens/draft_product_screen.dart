@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:expandable/expandable.dart';
 import 'package:go_to_laser_store/color_swatches.dart';
-import 'package:go_to_laser_store/models/product_attribute_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
-import 'package:go_to_laser_store/models/product_variation_attribute_model.dart';
 import 'package:go_to_laser_store/models/product_variation_model.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
@@ -38,122 +36,47 @@ class ProductScreen extends StatefulWidget {
   @override
   _ProductScreenState createState() => _ProductScreenState();
 
-  // static Widget selectDropdown(
-  //   BuildContext context,
-  //   Object initialValue,
-  //   dynamic data, {
-  //   Function onChanged,
-  //   Function onValidate,
-  // }) {
-  //   return Align(
-  //     alignment: Alignment.topLeft,
-  //     child: Container(
-  //       height: 50,
-  //       width: 170,
-  //       child: DropdownButtonFormField<ProductVariation>(
-  //           hint: Text('Opciones'),
-  //           value: null,
-  //           isDense: true,
-  //           onChanged: (ProductVariation productVariation) {
-  //             FocusScope.of(context).requestFocus(FocusNode());
-  //             onChanged(productVariation);
-  //           },
-  //           items: data?.map<DropdownMenuItem<ProductVariation>>(
-  //             (ProductVariation productVariation) {
-  //               return DropdownMenuItem<ProductVariation>(
-  //                 value: productVariation,
-  //                 child: Text(
-  //                   productVariation.attributes.first.name +
-  //                       " " +
-  //                       productVariation.attributes.first.options[0],
-  //                 ),
-  //               );
-  //             },
-  //           )?.toList()),
-  //     ),
-  //   );
-  // }
+  static Widget selectDropdown(
+    BuildContext context,
+    Object initialValue,
+    dynamic data, {
+    Function onChanged,
+    Function onValidate,
+  }) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        height: 50,
+        width: 170,
+        child: DropdownButtonFormField<ProductVariation>(
+            hint: Text('Opciones'),
+            value: null,
+            isDense: true,
+            onChanged: (ProductVariation productVariation) {
+              FocusScope.of(context).requestFocus(FocusNode());
+              onChanged(productVariation);
+            },
+            items: data?.map<DropdownMenuItem<ProductVariation>>(
+              (ProductVariation productVariation) {
+                return DropdownMenuItem<ProductVariation>(
+                  value: productVariation,
+                  child: Text(
+                    productVariation.attributes.first.name +
+                        " " +
+                        productVariation.attributes.first.option,
+                  ),
+                );
+              },
+            )?.toList()),
+      ),
+    );
+  }
 }
 
 class _ProductScreenState extends State<ProductScreen> {
   String get _getSavings => (double.parse(widget.product.regularPrice) -
           double.parse(widget.product.salePrice))
       .toStringAsFixed(2);
-
-  String _currentMaterial;
-  String _currentSize;
-  bool _loadingVariations = false;
-  List<ProductVariation> productVariations;
-
-  void _setDefaultAttributes() {
-    List<ProductVariation> productVariation = productVariations
-        .where((ProductVariation productVariation) =>
-            productVariation.price == widget.product.price)
-        .toList();
-
-    List<ProductVariationAttribute> materialAttribute = productVariation[0]
-        .attributes
-        .where((attribute) => attribute.name == "Material")
-        .toList();
-
-    List<ProductVariationAttribute> sizeAttribute = productVariation[0]
-        .attributes
-        .where((attribute) => attribute.name == "Tamaño")
-        .toList();
-
-    _currentMaterial = materialAttribute[0].option;
-    _currentSize = sizeAttribute[0].option;
-  }
-
-  void _fetchProductVariations() async {
-    _loadingVariations = true;
-    productVariations =
-        await widget.woocommerce.getVariableProduct(widget.product.id);
-    print(productVariations);
-    _loadingVariations = false;
-    _setDefaultAttributes();
-    setState(() {});
-    return;
-  }
-
-  void _updatePrice() {
-    // if (_currentSize == null) _currentSize = "Mediano";
-    // if (_currentMaterial == null) _currentMaterial = "MDF sencillo";
-
-    // TODO: set loadingState
-    List<ProductVariation> productVariation = productVariations
-        ?.where((ProductVariation productVariation) =>
-            productVariation.attributes
-                    ?.where((productVariationAttributes) =>
-                        productVariationAttributes.name == "Tamaño")
-                    ?.toList()[0]
-                    .option ==
-                _currentSize &&
-            productVariation.attributes
-                    ?.where((productVariationAttributes) =>
-                        productVariationAttributes.name == "Material")
-                    ?.toList()[0]
-                    .option ==
-                _currentMaterial)
-        ?.toList();
-
-    if (productVariation != null) {
-      widget.product.price = productVariation[0].price;
-      if (productVariation[0].onSale) {
-        widget.product.regularPrice = productVariation[0].regularPrice;
-        widget.product.salePrice = productVariation[0].salePrice;
-      } else {
-        widget.product.regularPrice = '';
-        widget.product.salePrice = '';
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    _fetchProductVariations();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -244,29 +167,23 @@ class _ProductScreenState extends State<ProductScreen> {
             style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 20),
           ),
           SizedBox(height: 10),
-          Column(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildPrice(context),
-              SizedBox(height: 10),
-              if (widget.product.type == 'variable')
-                _loadingVariations == true
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildMaterialDropdown(),
-                          _buildSizeDropdown()
-                        ],
-                      ),
+              _buildPrice(
+                context,
+                // discount: product.calculateDiscount().toString(),
+                // onSale: product.onSale,
+                // price: product.price,
+                // regularPrice: product.regularPrice,
+                // savings: _getSavings,
+              ),
+              if (widget.product.type == 'variable') _buildDropdown(),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // TODO: modify to show variation sku if any
               Text(
                 'Código: ${widget.product.sku}',
                 style: Theme.of(context).textTheme.bodyText1,
@@ -385,97 +302,31 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget _buildMaterialDropdown() {
-    final options = widget.product.attributes
-        .where((attribute) => attribute.name == 'Material')
-        .toList();
-    return Container(
-      height: 70,
-      width: (MediaQuery.of(context).size.width - 50) / 2,
-      child: DropdownButtonFormField(
-        hint: Text('Material'),
-        decoration: fieldDecoration(context, '', ''),
-        isDense: true,
-        value: _currentMaterial,
-        items: options[0].options.map((option) {
-          return DropdownMenuItem(
-            value: option,
-            child: Text(
-              option,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          );
-        }).toList(),
-        onChanged: (productVariation) {
-          setState(
-            () {
-              _currentMaterial = productVariation;
-              _updatePrice();
+  Widget _buildDropdown() {
+    return FutureBuilder<List<ProductVariation>>(
+      future: widget.woocommerce.getVariableProduct(widget.product.id),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<ProductVariation>> productVariationsList) {
+        if (productVariationsList.hasData) {
+          final productVariations = productVariationsList.data;
+          return ProductScreen.selectDropdown(
+            context,
+            '',
+            productVariations,
+            onChanged: (ProductVariation productVariation) {
+              print(productVariation.price);
+              widget.product.price = productVariation.price;
+              widget.product.regularPrice = productVariation.regularPrice;
+              widget.product.salePrice = productVariation.salePrice;
+              setState(() {});
             },
           );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSizeDropdown() {
-    final options = widget.product.attributes
-        .where((attribute) => attribute.name == 'Tamaño')
-        .toList();
-    return Container(
-      height: 70,
-      width: (MediaQuery.of(context).size.width - 50) / 2,
-      child: DropdownButtonFormField(
-        hint: Text('Size'),
-        decoration: fieldDecoration(context, '', ''),
-        isDense: true,
-        value: _currentSize,
-        items: options[0].options.map((option) {
-          return DropdownMenuItem(
-            value: option,
-            child: Text(
-              option,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
           );
-        }).toList(),
-        onChanged: (productVariation) {
-          setState(
-            () {
-              _currentSize = productVariation;
-              _updatePrice();
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  static InputDecoration fieldDecoration(
-    BuildContext context,
-    String hintText,
-    String helperText, {
-    Widget prefixIcon,
-    Widget sufixIcon,
-  }) {
-    return InputDecoration(
-      contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-      hintText: hintText,
-      helperText: helperText,
-      prefixIcon: prefixIcon,
-      suffixIcon: sufixIcon,
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: greySwatch.shade500,
-          width: 1.0,
-        ),
-      ),
-      border: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.red,
-          width: 1.0,
-        ),
-      ),
+        }
+      },
     );
   }
 }
