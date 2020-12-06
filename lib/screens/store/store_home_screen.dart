@@ -55,6 +55,7 @@ class StoreHomeScreen extends StatelessWidget {
           title: 'Los más vendidos',
           description: 'Mira lo que más le gusta a las personas',
           linkText: 'Ver más',
+          tagId: Config.topSellingTagId,
         ),
         _buildProducts(Config.topSellingTagId),
         SizedBox(height: 20),
@@ -62,6 +63,7 @@ class StoreHomeScreen extends StatelessWidget {
           title: 'Oferta',
           description: 'Mira nuestras últimas ofertas',
           linkText: 'Ver más',
+          tagId: Config.offerTagId,
         ),
         _buildProducts(Config.offerTagId)
       ],

@@ -6,13 +6,6 @@ import 'package:go_to_laser_store/styles/dimensions.dart' as Dimensions;
 ///
 /// If {loading} is true, displays a circular progress indicator instead of child.
 class PrimaryButton extends StatelessWidget {
-  final void Function() onPressed;
-  final Widget child;
-  final bool isLoading;
-  final double borderRadius;
-  final List<Color> gradientColors;
-  final double padding;
-
   const PrimaryButton({
     Key key,
     @required this.onPressed,
@@ -25,6 +18,13 @@ class PrimaryButton extends StatelessWidget {
     ],
     this.padding = Dimensions.buttonPadding,
   }) : super(key: key);
+
+  final void Function() onPressed;
+  final Widget child;
+  final bool isLoading;
+  final double borderRadius;
+  final List<Color> gradientColors;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {

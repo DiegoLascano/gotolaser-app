@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/screens/store/product_screen.dart';
+import 'package:go_to_laser_store/styles/app_colors.dart';
+import 'package:go_to_laser_store/styles/dimensions.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
+import 'package:go_to_laser_store/widgets/common/primary_button.dart';
 import 'package:go_to_laser_store/widgets/store/product_rating_widget.dart';
 
 class ProductCard extends StatelessWidget {
@@ -35,7 +38,7 @@ class ProductCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _buildImage(product),
+            _buildImage(context, product),
             _buildDescription(context, product),
           ],
         ),
@@ -43,7 +46,7 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(Product product) {
+  Widget _buildImage(BuildContext context, Product product) {
     return Stack(
       children: [
         Container(
@@ -53,20 +56,17 @@ class ProductCard extends StatelessWidget {
         ),
         product.onSale
             ? Positioned(
-                top: 5,
-                left: 5,
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.green[100],
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.green[900], width: 1.0),
-                  ),
-                  child: Text(
-                    'Oferta',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green[900],
+                top: 5.0,
+                right: 5.0,
+                child: SizedBox(
+                  width: 40.0,
+                  height: 40.0,
+                  child: PrimaryButton(
+                    // padding: 2,
+                    onPressed: null,
+                    child: Icon(
+                      Icons.local_offer,
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
@@ -91,9 +91,18 @@ class ProductCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 5),
-          ProductRating(product: product),
+          Row(
+            children: [
+              ProductRating(product: product),
+              SizedBox(width: 10),
+              Text(
+                '(${product.ratingCount})',
+                style: Theme.of(context).textTheme.bodyText1,
+              )
+            ],
+          ),
           SizedBox(height: 5),
-          _buildDiscountBadge(product),
+          _buildDiscountBadge(context, product),
           SizedBox(height: 5),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 5),
@@ -102,10 +111,10 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   '\$${product.price}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryText,
+                      ),
                 ),
                 GestureDetector(
                   onTap: () {},
@@ -122,15 +131,15 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDiscountBadge(Product product) {
+  Widget _buildDiscountBadge(BuildContext context, Product product) {
     return product.onSale
         ? Container(
-            height: 24,
+            height: 26,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.green[900], width: 1.0),
+              // border: Border.all(color: Colors.green[900], width: 1.0),
               borderRadius: BorderRadius.circular(15),
-              color: Colors.green[100],
+              color: Colors.green[200],
             ),
             child: RichText(
               text: TextSpan(
@@ -139,17 +148,20 @@ class ProductCard extends StatelessWidget {
                     text: product.type == 'variable'
                         ? ''
                         : '\$${product.regularPrice}  ',
-                    style: TextStyle(
-                        color: Colors.green[900],
-                        decoration: TextDecoration.lineThrough),
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: AppColors.primaryText,
+                          decoration: TextDecoration.lineThrough,
+                          fontSize: 15,
+                        ),
                   ),
                   TextSpan(
                     text: product.type == 'variable'
                         ? 'Múltiples descuentos'
                         : '(${product.calculateDiscount()}% desc.)',
-                    style: TextStyle(
-                      color: Colors.green[900],
-                    ),
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: AppColors.primaryText,
+                          fontSize: 15,
+                        ),
                   )
                 ],
               ),

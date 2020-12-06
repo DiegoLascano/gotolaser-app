@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_to_laser_store/screens/store/products_screen.dart';
 
 class SectionTitle extends StatelessWidget {
-  const SectionTitle({
-    Key key,
-    @required this.title,
-    this.description,
-    this.linkText,
-  }) : super(key: key);
+  const SectionTitle(
+      {Key key,
+      @required this.title,
+      this.description,
+      this.linkText,
+      this.tagId})
+      : super(key: key);
 
   final String title;
   final String description;
   final String linkText;
+  final String tagId;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,11 @@ class SectionTitle extends StatelessWidget {
                         linkText,
                         style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProductsScreen.create(context, tagId: tagId)),
+                      ),
                     )
                   : SizedBox(width: 0),
             ],

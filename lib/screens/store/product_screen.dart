@@ -84,7 +84,6 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   void _updatePrice() {
-    // TODO: set loadingState
     List<ProductVariation> productVariation = productVariations
         ?.where((ProductVariation productVariation) =>
             productVariation.attributes
@@ -103,6 +102,8 @@ class _ProductScreenState extends State<ProductScreen> {
 
     if (productVariation != null) {
       widget.product.price = productVariation[0].price;
+      if (productVariation[0].sku != null)
+        widget.product.sku = productVariation[0].sku;
       if (productVariation[0].onSale) {
         widget.product.regularPrice = productVariation[0].regularPrice;
         widget.product.salePrice = productVariation[0].salePrice;
@@ -706,8 +707,7 @@ class _ProductScreenState extends State<ProductScreen> {
 //   void _updatePrice() {
 //     // if (_currentSize == null) _currentSize = "Mediano";
 //     // if (_currentMaterial == null) _currentMaterial = "MDF sencillo";
-//
-//     // TODO: set loadingState
+
 //     List<ProductVariation> productVariation = productVariations
 //         ?.where((ProductVariation productVariation) =>
 //             productVariation.attributes
@@ -863,7 +863,6 @@ class _ProductScreenState extends State<ProductScreen> {
 //           Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: [
-//               // TODO: modify to show variation sku if any
 //               Text(
 //                 'Código: ${widget.product.sku}',
 //                 style: Theme.of(context).textTheme.bodyText1,

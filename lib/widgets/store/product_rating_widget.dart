@@ -53,11 +53,6 @@ class ProductRating extends StatelessWidget {
             color: color,
             size: size,
           ),
-          // SizedBox(width: 10),
-          // Text(
-          //   '(${product.ratingCount})',
-          //   style: Theme.of(context).textTheme.bodyText1,
-          // )
         ],
       ),
     );

@@ -43,7 +43,7 @@ class GridItemsBuilder<T> extends StatelessWidget {
       controller: scrollController,
       scrollDirection: Axis.vertical,
       crossAxisCount: 2,
-      childAspectRatio: 0.54,
+      childAspectRatio: 0.52,
       children: items.map((item) => itemBuilder(context, item)).toList(),
     );
   }

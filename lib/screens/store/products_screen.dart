@@ -14,7 +14,6 @@ import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
 import 'package:provider/provider.dart';
 
 // TODO: add skeleton loading to this screen
-// TODO: handle error and empty content screen
 class ProductsScreen extends StatefulWidget {
   ProductsScreen({
     Key key,
@@ -71,13 +70,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
     widget.productsProvider.resetStreams();
     widget.productsProvider.setLoadingMoreState(LoadMoreStatus.INITIAL);
     widget.productsProvider.setLoadingProductsState(LoadProductsStatus.LOADING);
-    widget.productsProvider.fetchProducts(_page, categoryId: widget.categoryId);
+    widget.productsProvider.fetchProducts(_page,
+        categoryId: widget.categoryId, tagId: widget.tagId);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         widget.productsProvider.setLoadingMoreState(LoadMoreStatus.LOADING);
-        widget.productsProvider
-            .fetchProducts(++_page, categoryId: widget.categoryId);
+        widget.productsProvider.fetchProducts(++_page,
+            categoryId: widget.categoryId, tagId: widget.tagId);
       }
     });
     super.initState();
@@ -195,8 +195,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
         widget.productsProvider.setSortOrder(sortBy);
         widget.productsProvider
             .setLoadingProductsState(LoadProductsStatus.LOADING);
-        widget.productsProvider
-            .fetchProducts(_page, categoryId: widget.categoryId);
+        widget.productsProvider.fetchProducts(_page,
+            categoryId: widget.categoryId, tagId: widget.tagId);
       },
       itemBuilder: (BuildContext context) {
         return _sortByOptions.map((option) {
@@ -235,8 +235,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  // TODO: refactor this to handle 4 states (grid items builder)
-  // TODO: add loadingState for fetchProducts from provider so we can get when empty content is received after loading
   Widget _buildContent() {
     return Consumer<ProductsProvider>(
       builder: (context, productsProvider, child) {
