@@ -50,6 +50,9 @@ class ProductsSearchDelegate extends SearchDelegate<Product> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    print(catergoryId);
+    print(tagId);
+
     if (query.isEmpty) {
       return Container();
     }

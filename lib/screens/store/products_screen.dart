@@ -67,6 +67,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void initState() {
+    print(widget.categoryId);
+    print(widget.tagId);
     widget.productsProvider.resetStreams();
     widget.productsProvider.setLoadingMoreState(LoadMoreStatus.INITIAL);
     widget.productsProvider.setLoadingProductsState(LoadProductsStatus.LOADING);
@@ -117,7 +119,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       showSearch(
                         context: context,
                         delegate: ProductsSearchDelegate(
-                            catergoryId: widget.categoryId),
+                          catergoryId: widget.categoryId,
+                          tagId: widget.tagId,
+                        ),
                       );
                     },
                   ),
@@ -174,8 +178,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 onPressed: () {
                   showSearch(
                     context: context,
-                    delegate:
-                        ProductsSearchDelegate(catergoryId: widget.categoryId),
+                    delegate: ProductsSearchDelegate(
+                        catergoryId: widget.categoryId, tagId: widget.tagId),
                   );
                 },
               ),
