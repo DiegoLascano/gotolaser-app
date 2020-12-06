@@ -7,6 +7,9 @@ import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/providers/products_provider.dart';
 import 'package:go_to_laser_store/search/products_search_delegate.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
+import 'package:go_to_laser_store/widgets/common/custom_appbar_widget.dart';
+import 'package:go_to_laser_store/widgets/store/empty_content.dart';
+import 'package:go_to_laser_store/widgets/store/grid_items_builder.dart';
 import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -16,15 +19,21 @@ class ProductsScreen extends StatefulWidget {
   ProductsScreen({
     Key key,
     @required this.woocommerce,
-    @required this.categoryId,
+    this.categoryId,
+    this.tagId,
     @required this.productsProvider,
   }) : super(key: key);
 
   final WoocommerceService woocommerce;
   final String categoryId;
+  final String tagId;
   final ProductsProvider productsProvider;
 
-  static Widget create(BuildContext context, String categoryId) {
+  static Widget create(
+    BuildContext context, {
+    String categoryId,
+    String tagId,
+  }) {
     final productsProvider =
         Provider.of<ProductsProvider>(context, listen: false);
 
@@ -34,6 +43,7 @@ class ProductsScreen extends StatefulWidget {
         builder: (context, woocommerce, _) => ProductsScreen(
           woocommerce: woocommerce,
           categoryId: categoryId,
+          tagId: tagId,
           productsProvider: productsProvider,
         ),
       ),
@@ -59,12 +69,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   void initState() {
     widget.productsProvider.resetStreams();
-    widget.productsProvider.setLoadingState(LoadMoreStatus.INITIAL);
+    widget.productsProvider.setLoadingMoreState(LoadMoreStatus.INITIAL);
+    widget.productsProvider.setLoadingProductsState(LoadProductsStatus.LOADING);
     widget.productsProvider.fetchProducts(_page, categoryId: widget.categoryId);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        widget.productsProvider.setLoadingState(LoadMoreStatus.LOADING);
+        widget.productsProvider.setLoadingMoreState(LoadMoreStatus.LOADING);
         widget.productsProvider
             .fetchProducts(++_page, categoryId: widget.categoryId);
       }
@@ -75,31 +86,49 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('GoTo Láser'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate:
-                    ProductsSearchDelegate(catergoryId: widget.categoryId),
-              );
-            },
-          ),
-          _buildFilterAction(),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: Text('GoTo Láser'),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.search),
+      //       onPressed: () {
+      //         showSearch(
+      //           context: context,
+      //           delegate:
+      //               ProductsSearchDelegate(catergoryId: widget.categoryId),
+      //         );
+      //       },
+      //     ),
+      //     _buildFilterAction(),
+      //   ],
+      // ),
+      body: SafeArea(
         child: Stack(
           children: [
             Column(
               children: [
-                // _buildFilters(),
-                Flexible(child: _buildContent()),
+                // _buildCustomAppbar(context),
+                CustomAppbar(actions: [
+                  IconButton(
+                    padding: EdgeInsets.all(0.0),
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      showSearch(
+                        context: context,
+                        delegate: ProductsSearchDelegate(
+                            catergoryId: widget.categoryId),
+                      );
+                    },
+                  ),
+                  _buildFilterAction(),
+                ]),
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: _buildContent(),
+                  ),
+                ),
               ],
             ),
             Align(
@@ -116,28 +145,56 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _buildLoadingIndicator() {
-    return Consumer<ProductsProvider>(
-      builder: (context, productsProvider, child) {
-        return Visibility(
-          visible:
-              productsProvider.getLoadMoreStatus() == LoadMoreStatus.LOADING,
-          child: Container(
-            height: 35.0,
-            width: 35.0,
-            padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
-            child: CircularProgressIndicator(),
+  Widget _buildCustomAppbar(context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 1,
+        //     blurRadius: 1,
+        //     offset: Offset(0, 2), // changes position of shadow
+        //   ),
+        // ],
+      ),
+      height: 60,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: Icon(Icons.keyboard_backspace),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-        );
-      },
+          Row(
+            children: [
+              IconButton(
+                padding: EdgeInsets.all(0.0),
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate:
+                        ProductsSearchDelegate(catergoryId: widget.categoryId),
+                  );
+                },
+              ),
+              _buildFilterAction(),
+            ],
+          )
+        ],
+      ),
     );
   }
 
   Widget _buildFilterAction() {
     return PopupMenuButton(
+      padding: EdgeInsets.all(0.0),
       onSelected: (sortBy) {
         widget.productsProvider.resetStreams();
         widget.productsProvider.setSortOrder(sortBy);
+        widget.productsProvider
+            .setLoadingProductsState(LoadProductsStatus.LOADING);
         widget.productsProvider
             .fetchProducts(_page, categoryId: widget.categoryId);
       },
@@ -161,29 +218,56 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
+  Widget _buildLoadingIndicator() {
+    return Consumer<ProductsProvider>(
+      builder: (context, productsProvider, child) {
+        return Visibility(
+          visible:
+              productsProvider.getLoadMoreStatus() == LoadMoreStatus.LOADING,
+          child: Container(
+            height: 35.0,
+            width: 35.0,
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
+  // TODO: refactor this to handle 4 states (grid items builder)
+  // TODO: add loadingState for fetchProducts from provider so we can get when empty content is received after loading
   Widget _buildContent() {
     return Consumer<ProductsProvider>(
       builder: (context, productsProvider, child) {
-        if (productsProvider.allProducts != null &&
-            productsProvider.allProducts.length > 0 &&
-            productsProvider.getLoadMoreStatus() != LoadMoreStatus.INITIAL) {
-          final products = productsProvider.allProducts;
-          return GridView.count(
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            controller: _scrollController,
-            scrollDirection: Axis.vertical,
-            crossAxisCount: 2,
-            childAspectRatio: 0.54,
-            children: products
-                .map((Product product) => ProductCard(product: product))
-                .toList(),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        print(productsProvider.allProducts);
+        return GridItemsBuilder(
+          itemsList: productsProvider.allProducts,
+          isLoading: productsProvider.getLoadProductsStatus() ==
+              LoadProductsStatus.LOADING,
+          scrollController: _scrollController,
+          itemBuilder: (context, product) => ProductCard(product: product),
+        );
+        // if (productsProvider.allProducts != null &&
+        //     productsProvider.allProducts.length > 0 &&
+        //     productsProvider.getLoadMoreStatus() != LoadMoreStatus.INITIAL) {
+        //   final products = productsProvider.allProducts;
+        //   return GridView.count(
+        //     mainAxisSpacing: 10,
+        //     crossAxisSpacing: 10,
+        //     controller: _scrollController,
+        //     scrollDirection: Axis.vertical,
+        //     crossAxisCount: 2,
+        //     childAspectRatio: 0.54,
+        //     children: products
+        //         .map((Product product) => ProductCard(product: product))
+        //         .toList(),
+        //   );
+        // } else {
+        //   return Center(
+        //     child: CircularProgressIndicator(),
+        //   );
+        // }
       },
     );
     // return FutureBuilder(

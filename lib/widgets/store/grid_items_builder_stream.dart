@@ -3,33 +3,32 @@ import 'package:go_to_laser_store/widgets/store/empty_content.dart';
 
 typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
-class GridItemsBuilder<T> extends StatelessWidget {
-  const GridItemsBuilder({
+class GridItemsBuilderStream<T> extends StatelessWidget {
+  const GridItemsBuilderStream({
     Key key,
-    @required this.itemsList,
-    @required this.scrollController,
+    @required this.snapshot,
     @required this.itemBuilder,
-    @required this.isLoading,
+    @required this.scrollController,
   }) : super(key: key);
 
-  final List<T> itemsList;
-  final bool isLoading;
+  final AsyncSnapshot<List<T>> snapshot;
   final ScrollController scrollController;
   final ItemWidgetBuilder<T> itemBuilder;
 
   @override
   Widget build(BuildContext context) {
-    if (itemsList != null) {
-      final List<T> items = itemsList;
+    if (snapshot.hasData) {
+      final List<T> items = snapshot.data;
       if (items.isNotEmpty) {
         return _buildGrid(context, items);
-      } else if (items.isEmpty && isLoading == true) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
       } else {
         return EmptyContent();
       }
+    } else if (snapshot.hasError) {
+      return EmptyContent(
+        title: 'Alga salió mal',
+        message: 'No se pueden cargar los productos ahora. Vuelve más tarde.',
+      );
     }
     return Center(
       child: CircularProgressIndicator(),

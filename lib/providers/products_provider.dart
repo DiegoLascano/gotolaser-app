@@ -12,6 +12,7 @@ class SortBy {
 
 // TODO: refactor LoadMoreStatus related names to something less ugly (LoadingState)
 enum LoadMoreStatus { INITIAL, LOADING, STABLE }
+enum LoadProductsStatus { LOADING, STABLE }
 
 class ProductsProvider with ChangeNotifier {
   WoocommerceService _woocommerceService;
@@ -26,6 +27,9 @@ class ProductsProvider with ChangeNotifier {
   LoadMoreStatus _loadMoreStatus = LoadMoreStatus.STABLE;
   getLoadMoreStatus() => _loadMoreStatus;
 
+  LoadProductsStatus _loadProductsStatus = LoadProductsStatus.STABLE;
+  getLoadProductsStatus() => _loadProductsStatus;
+
   ProductsProvider() {
     resetStreams();
     _sortBy = SortBy("modified", "El más nuevo", "asc");
@@ -36,8 +40,13 @@ class ProductsProvider with ChangeNotifier {
     _productsList = List<Product>();
   }
 
-  setLoadingState(LoadMoreStatus loadMoreStatus) {
+  setLoadingMoreState(LoadMoreStatus loadMoreStatus) {
     _loadMoreStatus = loadMoreStatus;
+    notifyListeners();
+  }
+
+  setLoadingProductsState(LoadProductsStatus loadProductsStatus) {
+    _loadProductsStatus = loadProductsStatus;
     notifyListeners();
   }
 
@@ -68,8 +77,10 @@ class ProductsProvider with ChangeNotifier {
     );
 
     if (products.length > 0) _productsList.addAll(products);
+    // print(_productsList.isEmpty);
 
-    setLoadingState(LoadMoreStatus.STABLE);
+    setLoadingMoreState(LoadMoreStatus.STABLE);
+    setLoadingProductsState(LoadProductsStatus.STABLE);
     notifyListeners();
   }
 }

@@ -7,7 +7,7 @@ import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/search/test_product_search.dart';
 // import 'package:go_to_laser_store/providers/products_provider.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
-import 'package:go_to_laser_store/widgets/store/grid_items_builder.dart';
+import 'package:go_to_laser_store/widgets/store/grid_items_builder_stream.dart';
 import 'package:go_to_laser_store/widgets/store/list_items_builder.dart';
 import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
 import 'package:provider/provider.dart';
@@ -150,7 +150,7 @@ class _TestProductsScreenState extends State<TestProductsScreen> {
       child: StreamBuilder<List<Product>>(
         stream: widget.productsBloc.productsStream,
         builder: (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
-          return GridItemsBuilder(
+          return GridItemsBuilderStream(
             snapshot: snapshot,
             scrollController: _scrollController,
             itemBuilder: (context, product) => ProductCard(product: product),

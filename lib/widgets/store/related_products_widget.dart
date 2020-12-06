@@ -16,7 +16,7 @@ class RelatedProducts extends StatelessWidget {
   final WoocommerceService woocommerce;
 
   // TODO: add ProductsProvider()
-  // TODO: change futures to fetch data from Provider instead from Woocommerce service
+  // TODO: change futures to fetch data from Provider instead of Woocommerce service
   static Widget create(BuildContext context, Product product) {
     return Provider<WoocommerceServiceBase>(
       create: (_) => WoocommerceService(),
@@ -31,16 +31,13 @@ class RelatedProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: product.crossSellIDs.isNotEmpty,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTitle(context),
-          SizedBox(height: 10),
-          _buildGrid(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTitle(context),
+        SizedBox(height: 10),
+        _buildGrid(),
+      ],
     );
   }
 
@@ -49,10 +46,7 @@ class RelatedProducts extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Text(
         'Productos que te pueden interesar',
-        style: Theme.of(context).textTheme.subtitle2.copyWith(
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-            ),
+        style: Theme.of(context).textTheme.headline3,
       ),
     );
   }

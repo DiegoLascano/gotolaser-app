@@ -4,6 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
+import 'package:go_to_laser_store/screens/draft_product_screen.dart';
+import 'package:go_to_laser_store/screens/test_product_screen.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
 
 class ProductThumbnail extends StatelessWidget {
@@ -13,17 +15,24 @@ class ProductThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: 100,
-      // width: 150,
-      // margin: EdgeInsets.symmetric(horizontal: 5),
-      // padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(5),
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TestProductScreen.create(context, product),
+        ),
       ),
-      child: LoadImage(
-        imageUrl: product.images[0]?.url ?? null,
+      child: Container(
+        // height: 100,
+        // width: 150,
+        // margin: EdgeInsets.symmetric(horizontal: 5),
+        // padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: LoadImage(
+          imageUrl: product.images[0]?.url ?? null,
+        ),
       ),
     );
   }

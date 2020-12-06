@@ -17,7 +17,7 @@ final greySwatch = const MaterialColor(
 );
 
 final purpleSwatch = const MaterialColor(
-  0xFF51279B,
+  0xFF653CAD,
   <int, Color>{
     50: Color(0xFFEAE2F8),
     100: Color(0xFFCFBCF2),

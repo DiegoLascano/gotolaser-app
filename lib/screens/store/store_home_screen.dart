@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/config.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
 import 'package:go_to_laser_store/widgets/store/category_card_widget.dart';
+import 'package:go_to_laser_store/widgets/store/empty_content.dart';
 import 'package:go_to_laser_store/widgets/store/product_thumbnail_widget.dart';
 import 'package:go_to_laser_store/widgets/store/section_title_widget.dart';
 import 'package:provider/provider.dart';
@@ -32,10 +34,10 @@ class StoreHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('GoTo Láser'),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: Text('GoTo Láser'),
+      // ),
       body: SafeArea(
         child: _buildContent(),
       ),
@@ -120,7 +122,7 @@ class StoreHomeScreen extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<List<Product>> productsList) {
         if (productsList.hasData) {
           final products = productsList.data;
-          if (products != null) {
+          if (products.isNotEmpty) {
             return Container(
               padding: EdgeInsets.all(10),
               child: GridView.count(
@@ -138,9 +140,7 @@ class StoreHomeScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return EmptyContent();
           }
         } else {
           return Center(
