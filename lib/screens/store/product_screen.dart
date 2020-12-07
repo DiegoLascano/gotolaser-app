@@ -124,10 +124,25 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Detalle',
+          style: Theme.of(context).textTheme.headline4.copyWith(
+                color: AppColors.primary,
+              ),
+        ),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.favorite_border_outlined),
+        //     onPressed: () {},
+        //   )
+        // ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppbar(actions: []),
+            // CustomAppbar(actions: []),
             Flexible(
               child: ListView(
                 children: [

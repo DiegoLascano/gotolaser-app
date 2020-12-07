@@ -1,5 +1,7 @@
 // import 'package:firebase_admob/firebase_admob.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:go_to_laser_store/admob/ad_manager.dart';
 import 'package:go_to_laser_store/screens/about/about_home_screen.dart';
 
 import 'package:go_to_laser_store/screens/account/account_screen.dart';
@@ -19,11 +21,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // TODO: uncomment this bloc to enable AdMob Ads
   // TODO: refactor to move admob related code to an more appropiate place
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   FirebaseAdMob.instance.initialize(appId: AdManager.appId);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  }
 
   TabItem _currentTab = TabItem.store;
 

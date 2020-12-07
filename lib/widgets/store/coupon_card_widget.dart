@@ -132,7 +132,7 @@ class CouponCard extends StatelessWidget {
       //   color: Colors.white,
       // ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
             coupon.code,

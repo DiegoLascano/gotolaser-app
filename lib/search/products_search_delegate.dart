@@ -16,7 +16,7 @@ class ProductsSearchDelegate extends SearchDelegate<Product> {
 
   final woocommerce = WoocommerceService();
 
-  final String searchFieldLabel = 'Busca tu producto';
+  final String searchFieldLabel = 'Busca en esta sección';
 
   @override
   List<Widget> buildActions(BuildContext context) {

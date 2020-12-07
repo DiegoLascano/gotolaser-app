@@ -14,8 +14,10 @@ class AppColors {
 
   static const Color gradientStart1 = Color(0xFFBD4F6C);
   static const Color gradientEnd1 = Color(0xFFD7816A);
+
   static const Color gradientStart2 = Color(0xFF5F0A87);
   static const Color gradientEnd2 = Color(0xFFA4508B);
+
   static const Color gradientStart3 = Color(0xFF184F6F);
   static const Color gradientEnd3 = Color(0xFF3D857D);
 }

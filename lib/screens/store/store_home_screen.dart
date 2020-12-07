@@ -1,10 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_admob/flutter_native_admob.dart';
+import 'package:flutter_native_admob/native_admob_controller.dart';
+import 'package:flutter_native_admob/native_admob_options.dart';
+import 'package:go_to_laser_store/admob/ad_manager.dart';
 import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/config.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
+import 'package:go_to_laser_store/search/products_search_delegate.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
+import 'package:go_to_laser_store/styles/app_colors.dart';
+import 'package:go_to_laser_store/styles/dimensions.dart';
+import 'package:go_to_laser_store/widgets/common/custom_appbar_widget.dart';
 import 'package:go_to_laser_store/widgets/common/skeleton_loader_widget.dart';
 import 'package:go_to_laser_store/widgets/store/category_card_widget.dart';
 import 'package:go_to_laser_store/widgets/store/empty_content.dart';
@@ -15,7 +25,7 @@ import 'package:provider/provider.dart';
 // TODO: add PullToRefresh feature to this screen
 // TODO: activate AdMob service and place one or more nativeAds
 // TODO: handle error and empty content screen????
-class StoreHomeScreen extends StatelessWidget {
+class StoreHomeScreen extends StatefulWidget {
   const StoreHomeScreen({Key key, @required this.woocommerce})
       : super(key: key);
 
@@ -32,14 +42,81 @@ class StoreHomeScreen extends StatelessWidget {
   }
 
   @override
+  _StoreHomeScreenState createState() => _StoreHomeScreenState();
+}
+
+class _StoreHomeScreenState extends State<StoreHomeScreen> {
+  final _nativeAdController = NativeAdmobController();
+  double _nativeAdHeight = 0.0;
+  bool _adIsLoading = false;
+
+  StreamSubscription _subscription;
+
+  void _onStateChanged(AdLoadState state) {
+    switch (state) {
+      case AdLoadState.loading:
+        setState(() {
+          _nativeAdHeight = 0.0;
+          _adIsLoading = true;
+        });
+        break;
+
+      case AdLoadState.loadCompleted:
+        setState(() {
+          _nativeAdHeight = 200.0;
+          _adIsLoading = false;
+        });
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  @override
+  void initState() {
+    _subscription = _nativeAdController.stateChanged.listen(_onStateChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    _nativeAdController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text('GoTo Láser'),
-      // ),
+      appBar: AppBar(
+        // centerTitle: true,
+        title: Text(
+          'Catálogo Interactivo',
+          style: Theme.of(context).textTheme.headline4.copyWith(),
+        ),
+        actions: [
+          IconButton(
+            color: AppColors.primaryText,
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: ProductsSearchDelegate(),
+              );
+            },
+          )
+        ],
+      ),
       body: SafeArea(
-        child: _buildContent(),
+        child: Column(
+          children: [
+            // _buildCustomAppbar(),
+            Flexible(
+              child: _buildContent(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -47,7 +124,17 @@ class StoreHomeScreen extends StatelessWidget {
   Widget _buildContent() {
     return ListView(
       children: [
-        _buildBanner(),
+        // Padding(
+        //   padding: const EdgeInsets.all(10.0),
+        //   child: Align(
+        //     alignment: Alignment.centerLeft,
+        //     child: Text(
+        //       'Catálogo Digital',
+        //       style: Theme.of(context).textTheme.headline3,
+        //     ),
+        //   ),
+        // ),
+        _buildNavtiveAd(),
         SectionTitle(title: 'Categorías'),
         _buildCategories(),
         SizedBox(height: 20),
@@ -65,24 +152,91 @@ class StoreHomeScreen extends StatelessWidget {
           linkText: 'Ver más',
           tagId: Config.offerTagId,
         ),
-        _buildProducts(Config.offerTagId)
+        _buildProducts(Config.offerTagId),
+        _buildNavtiveAd()
       ],
     );
   }
 
-  // TODO: add promotion banner using carousel
-  Widget _buildBanner() {
+  Widget _buildCustomAppbar() {
     return Container(
-      height: 200,
-      child: Center(
-        child: Text('Banner de promociones'),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: Offset(0, 2), // changes position of shadow
+          ),
+        ],
+      ),
+      height: 60,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('GoTo Láser', style: Theme.of(context).textTheme.bodyText2),
+            Text('Catálogo Digital',
+                style: Theme.of(context).textTheme.subtitle1),
+          ],
+        ),
       ),
     );
   }
 
+  Widget _buildNavtiveAd() {
+    return _adIsLoading
+        ? Container(
+            margin: EdgeInsets.all(10.0),
+            child: SkeletonLoader.rounded(
+              height: 200.0,
+              borderRadius: BorderRadius.circular(buttonBorderRadius),
+            ),
+          )
+        : Container(
+            height: 200,
+            padding: EdgeInsets.all(10.0),
+            margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                AppColors.buttonGradientStart,
+                AppColors.buttonGradientEnd,
+              ]),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(0.0),
+              child: NativeAdmob(
+//          error: Text('Error al cargar el anuncio'),
+                adUnitID: AdManager.nativeAdUnitId,
+                controller: _nativeAdController,
+                options: NativeAdmobOptions(
+                  showMediaContent: true,
+                  ratingColor: Theme.of(context).accentColor,
+                  bodyTextStyle: NativeTextStyle(
+                    color: AppColors.primary,
+                  ),
+                  adLabelTextStyle: NativeTextStyle(
+                    // backgroundColor: Theme.of(context).primaryColor,
+                    color: AppColors.primary,
+                  ),
+                  headlineTextStyle: NativeTextStyle(
+                    color: AppColors.primary,
+                  ),
+                  callToActionStyle: NativeTextStyle(
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ),
+          );
+  }
+
   Widget _buildCategories() {
     return FutureBuilder(
-      future: woocommerce.getCategories(),
+      future: widget.woocommerce.getCategories(),
       builder:
           (BuildContext context, AsyncSnapshot<List<Category>> categoriesList) {
         if (categoriesList.hasData) {
@@ -140,7 +294,7 @@ class StoreHomeScreen extends StatelessWidget {
 
   Widget _buildProducts(String tagId) {
     return FutureBuilder(
-      future: woocommerce.getProducts(tagId: tagId, pageSize: 6),
+      future: widget.woocommerce.getProducts(tagId: tagId, pageSize: 6),
       builder:
           (BuildContext context, AsyncSnapshot<List<Product>> productsList) {
         if (productsList.hasData) {

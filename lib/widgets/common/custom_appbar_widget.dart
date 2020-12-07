@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomAppbar extends StatelessWidget {
   const CustomAppbar({
     Key key,
-    this.actions,
+    this.actions: const [],
   })  : assert(actions != null),
         super(key: key);
 

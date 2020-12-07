@@ -38,6 +38,12 @@ class MyApp extends StatelessWidget {
         title: 'GoTo Laser Store',
         home: HomeScreen(),
         theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            color: Colors.white,
+            iconTheme: IconThemeData(
+              color: AppColors.primaryText,
+            ),
+          ),
           brightness: Brightness.light,
           textTheme: AppTextStyles.customTextTheme,
           // primarySwatch: purpleSwatch

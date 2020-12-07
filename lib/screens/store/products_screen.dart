@@ -7,6 +7,7 @@ import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/providers/products_provider.dart';
 import 'package:go_to_laser_store/search/products_search_delegate.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
+import 'package:go_to_laser_store/styles/app_colors.dart';
 import 'package:go_to_laser_store/widgets/common/custom_appbar_widget.dart';
 import 'package:go_to_laser_store/widgets/store/empty_content.dart';
 import 'package:go_to_laser_store/widgets/store/grid_items_builder.dart';
@@ -88,45 +89,49 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text('GoTo Láser'),
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(Icons.search),
-      //       onPressed: () {
-      //         showSearch(
-      //           context: context,
-      //           delegate:
-      //               ProductsSearchDelegate(catergoryId: widget.categoryId),
-      //         );
-      //       },
-      //     ),
-      //     _buildFilterAction(),
-      //   ],
-      // ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Productos',
+          style: Theme.of(context).textTheme.headline4.copyWith(),
+        ),
+        actions: [
+          IconButton(
+            color: AppColors.primaryText,
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate:
+                    ProductsSearchDelegate(catergoryId: widget.categoryId),
+              );
+            },
+          ),
+          _buildFilterAction(),
+        ],
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             Column(
               children: [
                 // _buildCustomAppbar(context),
-                CustomAppbar(actions: [
-                  IconButton(
-                    padding: EdgeInsets.all(0.0),
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: ProductsSearchDelegate(
-                          catergoryId: widget.categoryId,
-                          tagId: widget.tagId,
-                        ),
-                      );
-                    },
-                  ),
-                  _buildFilterAction(),
-                ]),
+                // CustomAppbar(actions: [
+                //   IconButton(
+                //     padding: EdgeInsets.all(0.0),
+                //     icon: Icon(Icons.search),
+                //     onPressed: () {
+                //       showSearch(
+                //         context: context,
+                //         delegate: ProductsSearchDelegate(
+                //           catergoryId: widget.categoryId,
+                //           tagId: widget.tagId,
+                //         ),
+                //       );
+                //     },
+                //   ),
+                //   _buildFilterAction(),
+                // ]),
                 Flexible(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -176,6 +181,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       },
       icon: Icon(
         Icons.filter_list,
+        color: AppColors.primaryText,
         // color: greySwatch.shade900,
       ),
     );

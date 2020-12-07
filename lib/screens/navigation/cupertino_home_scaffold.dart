@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/screens/navigation/tab_item.dart';
 
 class CupertinoHomeScaffold extends StatelessWidget {
@@ -24,7 +25,7 @@ class CupertinoHomeScaffold extends StatelessWidget {
         border: Border(
           top: BorderSide(color: Colors.transparent),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: greySwatch.shade50,
         items: [
           _buildItem(context, TabItem.store),
           _buildItem(context, TabItem.coupons),

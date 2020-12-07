@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
-import 'package:go_to_laser_store/screens/draft_product_screen.dart';
+import 'package:go_to_laser_store/screens/store/product_screen.dart';
 import 'package:go_to_laser_store/screens/test_product_screen.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
 
@@ -18,7 +18,7 @@ class ProductThumbnail extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => TestProductScreen.create(context, product),
+          builder: (context) => ProductScreen.create(context, product),
         ),
       ),
       child: Container(

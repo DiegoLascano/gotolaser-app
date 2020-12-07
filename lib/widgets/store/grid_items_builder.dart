@@ -20,18 +20,22 @@ class GridItemsBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _childAspectRatio = 0.514;
     if (itemsList != null) {
       final List<T> items = itemsList;
       if (items.isNotEmpty) {
-        return _buildGrid(context, items);
+        return _buildGrid(context, items, _childAspectRatio);
       } else if (items.isEmpty && isLoading == true) {
-        return GridView.count(
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          scrollDirection: Axis.vertical,
-          crossAxisCount: 2,
-          childAspectRatio: 0.52,
-          children: [for (var i = 0; i < 6; i++) ProductCardSkeleton()],
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: GridView.count(
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            scrollDirection: Axis.vertical,
+            crossAxisCount: 2,
+            childAspectRatio: _childAspectRatio,
+            children: [for (var i = 0; i < 6; i++) ProductCardSkeleton()],
+          ),
         );
       } else {
         return EmptyContent();
@@ -42,19 +46,20 @@ class GridItemsBuilder<T> extends StatelessWidget {
       crossAxisSpacing: 10,
       scrollDirection: Axis.vertical,
       crossAxisCount: 2,
-      childAspectRatio: 0.52,
+      childAspectRatio: _childAspectRatio,
       children: [for (var i = 0; i < 6; i++) ProductCardSkeleton()],
     );
   }
 
-  Widget _buildGrid(BuildContext context, List<T> items) {
+  Widget _buildGrid(
+      BuildContext context, List<T> items, double _childAspectRatio) {
     return GridView.count(
-      mainAxisSpacing: 10,
+      // mainAxisSpacing: 10,
       crossAxisSpacing: 10,
       controller: scrollController,
       scrollDirection: Axis.vertical,
       crossAxisCount: 2,
-      childAspectRatio: 0.52,
+      childAspectRatio: _childAspectRatio,
       children: items.map((item) => itemBuilder(context, item)).toList(),
     );
   }
