@@ -45,14 +45,45 @@ class ProductsSearchDelegate extends SearchDelegate<Product> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Container();
+    if (query.isEmpty) {
+      return Container();
+    }
+
+    return FutureBuilder(
+      future: woocommerce.getProducts(
+          categoryId: catergoryId, tagId: tagId, strSearch: query),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<Product>> productsList) {
+        if (productsList.hasData) {
+          final products = productsList.data
+              .where((element) => element.name.toLowerCase().contains(query))
+              .toList();
+          if (products.isNotEmpty) {
+            return ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return SearchCard(
+                  product: products[index],
+                );
+              },
+            );
+          } else {
+            return EmptyContent(
+              title: 'Busqueda vacía',
+              message: 'No existe ningún producto que cumpla con tu búsqueda',
+            );
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // print(catergoryId);
-    // print(tagId);
-
     if (query.isEmpty) {
       return Container();
     }

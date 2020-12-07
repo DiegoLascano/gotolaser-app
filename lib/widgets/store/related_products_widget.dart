@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
+import 'package:go_to_laser_store/widgets/common/skeleton_loader_widget.dart';
 import 'package:go_to_laser_store/widgets/store/product_thumbnail_widget.dart';
 import 'package:go_to_laser_store/widgets/store/related_thumbnail_widget.dart';
 import 'package:provider/provider.dart';
@@ -80,8 +81,16 @@ class RelatedProducts extends StatelessWidget {
             );
           }
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
+          return Row(
+            children: [
+              for (var i = 0; i < 2; i++) ...{
+                if (i == 1) SizedBox(width: 2),
+                SkeletonLoader.square(
+                  width: (MediaQuery.of(context).size.width - 2) / 2,
+                  height: (MediaQuery.of(context).size.width - 2) / 2.3,
+                ),
+              }
+            ],
           );
         }
       },

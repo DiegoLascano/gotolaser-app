@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/screens/store/product_screen.dart';
+import 'package:go_to_laser_store/styles/app_colors.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
 import 'package:go_to_laser_store/widgets/store/product_rating_widget.dart';
 
@@ -61,11 +62,10 @@ class SearchCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            product.name,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
-                  fontSize: 16,
-                ),
+          Text(product.name, style: Theme.of(context).textTheme.headline4),
+          ProductRating(
+            product: product,
+            color: AppColors.secondary,
           ),
           SizedBox(height: 15),
           Row(
@@ -73,27 +73,26 @@ class SearchCard extends StatelessWidget {
             children: [
               Text(
                 '\$${product.price}',
-                style: Theme.of(context).textTheme.bodyText1.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    .copyWith(color: AppColors.secondary),
               ),
               SizedBox(width: 10),
               Visibility(
                 visible: product.onSale,
-                child: Text(
-                  '\$${product.regularPrice}  ',
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(
-                        color: Colors.green[900],
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.lineThrough,
-                        fontSize: 14,
+                child: product.type == 'variable'
+                    ? Text('Varios descuentos',
+                        style: Theme.of(context).textTheme.bodyText2)
+                    : Text(
+                        '\$${product.regularPrice}  ',
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              decoration: TextDecoration.lineThrough,
+                            ),
                       ),
-                ),
               ),
             ],
           ),
-          ProductRating(product: product),
         ],
       ),
     );

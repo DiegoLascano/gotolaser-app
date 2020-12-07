@@ -7,25 +7,26 @@ class ListItemsBuilder<T> extends StatelessWidget {
   const ListItemsBuilder({
     Key key,
     @required this.snapshot,
-    @required this.itemsBuilder,
+    @required this.itemBuilder,
   }) : super(key: key);
 
   final AsyncSnapshot<List<T>> snapshot;
-  final ItemWidgetBuilder<List<T>> itemsBuilder;
+  final ItemWidgetBuilder<T> itemBuilder;
 
   @override
   Widget build(BuildContext context) {
     if (snapshot.hasData) {
       final List<T> items = snapshot.data;
       if (items.isNotEmpty) {
-        return itemsBuilder(context, items);
+        return _buildList(items);
       } else {
         return EmptyContent();
       }
     } else if (snapshot.hasError) {
       return EmptyContent(
         title: 'Alga salió mal',
-        message: 'No se pueden cargar los productos ahora. Vuelve más tarde.',
+        message:
+            'No se pueden cargar la información por ahora. Vuelve más tarde.',
       );
     }
     return Center(
@@ -33,20 +34,14 @@ class ListItemsBuilder<T> extends StatelessWidget {
     );
   }
 
-  // Widget _buildGrid(List<T> items) {
-  //   return GridView.count(
-  //     mainAxisSpacing: 10,
-  //     crossAxisSpacing: 10,
-  //     controller: scrollController,
-  //     scrollDirection: Axis.vertical,
-  //     crossAxisCount: 2,
-  //     childAspectRatio: 0.54,
-  //     children: items
-  //         .map((items product) => ItemWidgetBuilder(product: product))
-  //         .toList(),
-  //   );
-  // }
-
+  Widget _buildList(List<T> items) {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return itemBuilder(context, items[index]);
+      },
+    );
+  }
   // Widget _buildList(List<T> items) {
   //   return ListView.separated(
   //     itemCount: items.length + 2,

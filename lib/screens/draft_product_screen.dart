@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:expandable/expandable.dart';
+// import 'package:expandable/expandable.dart';
 import 'package:go_to_laser_store/color_swatches.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/models/product_variation_model.dart';
@@ -194,53 +194,53 @@ class _ProductScreenState extends State<ProductScreen> {
           SizedBox(height: 5),
           Divider(thickness: 1),
           SizedBox(height: 5),
-          ExpandablePanel(
-            header: Text(
-              'Descripción del producto',
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-            ),
-            expanded: Text(
-              widget.product.description,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          ),
+          // ExpandablePanel(
+          //   header: Text(
+          //     'Descripción del producto',
+          //     style: Theme.of(context).textTheme.subtitle2.copyWith(
+          //           fontWeight: FontWeight.bold,
+          //           fontStyle: FontStyle.italic,
+          //         ),
+          //   ),
+          //   expanded: Text(
+          //     widget.product.description,
+          //     style: Theme.of(context).textTheme.bodyText1,
+          //   ),
+          // ),
           Divider(thickness: 1),
           SizedBox(height: 5),
-          ExpandablePanel(
-            header: Text(
-              'Detalles de envío',
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-            ),
-            expanded: Text(
-              'Se realizan envíos de los productos a todo el país. Los métodos '
-              'disponibles son Servientrega, Tramaco o por Cooperativas de'
-              'Transporte.\nEl envío se coordinará una vez se realice la compra.',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          ),
+          // ExpandablePanel(
+          //   header: Text(
+          //     'Detalles de envío',
+          //     style: Theme.of(context).textTheme.subtitle2.copyWith(
+          //           fontWeight: FontWeight.bold,
+          //           fontStyle: FontStyle.italic,
+          //         ),
+          //   ),
+          //   expanded: Text(
+          //     'Se realizan envíos de los productos a todo el país. Los métodos '
+          //     'disponibles son Servientrega, Tramaco o por Cooperativas de'
+          //     'Transporte.\nEl envío se coordinará una vez se realice la compra.',
+          //     style: Theme.of(context).textTheme.bodyText1,
+          //   ),
+          // ),
           Divider(thickness: 1),
           SizedBox(height: 5),
-          ExpandablePanel(
-            header: Row(
-              children: [
-                Text(
-                  'Comentarios',
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                      ),
-                ),
-                SizedBox(width: 10),
-                ProductRating(product: widget.product),
-              ],
-            ),
-          ),
+          // ExpandablePanel(
+          //   header: Row(
+          //     children: [
+          //       Text(
+          //         'Comentarios',
+          //         style: Theme.of(context).textTheme.subtitle2.copyWith(
+          //               fontWeight: FontWeight.bold,
+          //               fontStyle: FontStyle.italic,
+          //             ),
+          //       ),
+          //       SizedBox(width: 10),
+          //       ProductRating(product: widget.product),
+          //     ],
+          //   ),
+          // ),
           Divider(thickness: 1),
         ],
       ),

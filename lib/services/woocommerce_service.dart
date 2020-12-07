@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:go_to_laser_store/config.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
+import 'package:go_to_laser_store/models/coupon_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/models/product_variation_model.dart';
 
@@ -19,6 +20,7 @@ abstract class WoocommerceServiceBase {
     String sortOrder = "asc",
   });
   Future<List<ProductVariation>> getVariableProduct(int productId);
+  Future<List<Coupon>> getCoupons();
 }
 
 class WoocommerceService extends WoocommerceServiceBase {
@@ -76,7 +78,6 @@ class WoocommerceService extends WoocommerceServiceBase {
         Config.productsUrl +
         "?consumer_key=${Config.consumerKey}&consumer_secret=${Config.consumerSecret}${params.toString()}";
 
-    print(url);
     try {
       var response = await Dio().get(url,
           options: Options(
@@ -121,5 +122,30 @@ class WoocommerceService extends WoocommerceServiceBase {
       print(e.response);
     }
     return variableProducts;
+  }
+
+  Future<List<Coupon>> getCoupons() async {
+    List<Coupon> coupons;
+
+    String url = Config.baseUrl +
+        Config.couponsUrl +
+        "?consumer_key=${Config.consumerKey}&consumer_secret=${Config.consumerSecret}";
+
+    try {
+      var response = await Dio().get(url,
+          options: Options(
+              headers: {HttpHeaders.contentTypeHeader: "application/json"}));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        coupons = (response.data as List)
+            .map(
+              (coupon) => Coupon.fromJson(coupon),
+            )
+            .toList();
+      }
+    } on DioError catch (e) {
+      print(e.response);
+    }
+    return coupons;
   }
 }

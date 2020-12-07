@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/widgets/store/empty_content.dart';
+import 'package:go_to_laser_store/widgets/store/product_card_skeleton_widget.dart';
 
 typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
@@ -24,15 +25,25 @@ class GridItemsBuilder<T> extends StatelessWidget {
       if (items.isNotEmpty) {
         return _buildGrid(context, items);
       } else if (items.isEmpty && isLoading == true) {
-        return Center(
-          child: CircularProgressIndicator(),
+        return GridView.count(
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          scrollDirection: Axis.vertical,
+          crossAxisCount: 2,
+          childAspectRatio: 0.52,
+          children: [for (var i = 0; i < 6; i++) ProductCardSkeleton()],
         );
       } else {
         return EmptyContent();
       }
     }
-    return Center(
-      child: CircularProgressIndicator(),
+    return GridView.count(
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      scrollDirection: Axis.vertical,
+      crossAxisCount: 2,
+      childAspectRatio: 0.52,
+      children: [for (var i = 0; i < 6; i++) ProductCardSkeleton()],
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:go_to_laser_store/styles/app_colors.dart';
 import 'package:go_to_laser_store/widgets/common/custom_appbar_widget.dart';
 import 'package:go_to_laser_store/widgets/common/load_image_widget.dart';
 import 'package:go_to_laser_store/widgets/common/primary_button.dart';
+import 'package:go_to_laser_store/widgets/common/skeleton_loader_widget.dart';
 import 'package:go_to_laser_store/widgets/store/product_rating_widget.dart';
 // import 'package:go_to_laser_store/widgets/store/product_rating_widget.dart';
 import 'package:go_to_laser_store/widgets/store/related_products_widget.dart';
@@ -385,7 +386,7 @@ class _ProductScreenState extends State<ProductScreen> {
           SizedBox(
             // width: 80.0,
             child: PrimaryButton(
-              padding: 6,
+              padding: 2,
               onPressed: null,
               child: ProductRating(
                 product: widget.product,
@@ -442,8 +443,27 @@ class _ProductScreenState extends State<ProductScreen> {
         .toList();
 
     return _loadingVariations == true
-        ? Center(
-            child: CircularProgressIndicator(),
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SkeletonLoader.rounded(
+                height: 20,
+                width: 100,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              Row(
+                children: [
+                  for (var i = 0; i < 3; i++) ...{
+                    SkeletonLoader.rounded(
+                      height: 40,
+                      width: 40,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    SizedBox(width: 10),
+                  }
+                ],
+              )
+            ],
           )
         : Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,

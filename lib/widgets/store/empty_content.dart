@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class EmptyContent extends StatelessWidget {
   const EmptyContent({
     Key key,
-    this.title = 'Lista de Productos Vacía',
+    this.title = 'Lista Vacía',
     this.message =
-        'Estamos trabajando en nuevos productos.\nPronto tendrás más variedad.',
+        'Por ahora no existe contenido para esta sección. Pronto lo actualizaremos ',
   }) : super(key: key);
 
   final String title;

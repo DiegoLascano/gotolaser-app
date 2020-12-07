@@ -149,48 +149,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  // Widget _buildCustomAppbar(context) {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       color: Theme.of(context).scaffoldBackgroundColor,
-  //       // boxShadow: [
-  //       //   BoxShadow(
-  //       //     color: Colors.grey.withOpacity(0.3),
-  //       //     spreadRadius: 1,
-  //       //     blurRadius: 1,
-  //       //     offset: Offset(0, 2), // changes position of shadow
-  //       //   ),
-  //       // ],
-  //     ),
-  //     height: 60,
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         IconButton(
-  //           icon: Icon(Icons.keyboard_backspace),
-  //           onPressed: () => Navigator.of(context).pop(),
-  //         ),
-  //         Row(
-  //           children: [
-  //             IconButton(
-  //               padding: EdgeInsets.all(0.0),
-  //               icon: Icon(Icons.search),
-  //               onPressed: () {
-  //                 showSearch(
-  //                   context: context,
-  //                   delegate: ProductsSearchDelegate(
-  //                       catergoryId: widget.categoryId, tagId: widget.tagId),
-  //                 );
-  //               },
-  //             ),
-  //             _buildFilterAction(),
-  //           ],
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-
   // TODO: sortBy should not use new data, should order fetched products
   Widget _buildFilterAction() {
     return PopupMenuButton(

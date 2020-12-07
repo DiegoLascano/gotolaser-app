@@ -9,4 +9,5 @@ class Config {
   static String variableProductsUrl = 'variations';
   static String offerTagId = '29';
   static String topSellingTagId = '28';
+  static String couponsUrl = 'coupons';
 }

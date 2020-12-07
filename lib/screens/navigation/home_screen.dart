@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<TabItem, WidgetBuilder> get widgetBuilders {
     return {
       TabItem.store: (_) => StoreHomeScreen.create(context),
-      TabItem.coupons: (context) => CouponsHomeScreen(),
+      TabItem.coupons: (context) => CouponsHomeScreen.create(context),
       TabItem.about: (context) => AboutHomeScreen(),
       // TabItem.loved: (context) => Container(),
       // TabItem.cart: (_) => CartScreen(),

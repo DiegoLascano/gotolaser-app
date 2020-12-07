@@ -5,6 +5,7 @@ import 'package:go_to_laser_store/config.dart';
 import 'package:go_to_laser_store/models/category_model.dart';
 import 'package:go_to_laser_store/models/product_model.dart';
 import 'package:go_to_laser_store/services/woocommerce_service.dart';
+import 'package:go_to_laser_store/widgets/common/skeleton_loader_widget.dart';
 import 'package:go_to_laser_store/widgets/store/category_card_widget.dart';
 import 'package:go_to_laser_store/widgets/store/empty_content.dart';
 import 'package:go_to_laser_store/widgets/store/product_thumbnail_widget.dart';
@@ -13,7 +14,6 @@ import 'package:provider/provider.dart';
 
 // TODO: add PullToRefresh feature to this screen
 // TODO: activate AdMob service and place one or more nativeAds
-// TODO: add skeleton loading to this screen
 // TODO: handle error and empty content screen????
 class StoreHomeScreen extends StatelessWidget {
   const StoreHomeScreen({Key key, @required this.woocommerce})
@@ -104,13 +104,34 @@ class StoreHomeScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            // this is an empty content case, not likely to happen
+            return EmptyContent();
           }
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
+          return Container(
+            height: 140,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (var i = 0; i < 4; i++) ...{
+                  SizedBox(width: 10),
+                  Column(
+                    children: [
+                      SkeletonLoader.square(
+                        height: 100,
+                        width: 100,
+                      ),
+                      SizedBox(height: 10),
+                      SkeletonLoader.rounded(
+                        height: 18,
+                        width: 100,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ],
+                  ),
+                }
+              ],
+            ),
           );
         }
       },
@@ -145,11 +166,39 @@ class StoreHomeScreen extends StatelessWidget {
             return EmptyContent();
           }
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return _productThumbSkeleton(context);
         }
       },
+    );
+  }
+
+  Widget _productThumbSkeleton(BuildContext context) {
+    final _screenSize = MediaQuery.of(context).size;
+    return Column(
+      children: [
+        for (var i = 0; i < 2; i++) ...{
+          Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 10),
+                  SkeletonLoader.square(
+                    height: (_screenSize.width - 30.0) / 2.3,
+                    width: (_screenSize.width - 30.0) / 2,
+                  ),
+                  SizedBox(width: 10),
+                  SkeletonLoader.square(
+                    height: (_screenSize.width - 30.0) / 2.3,
+                    width: (_screenSize.width - 30.0) / 2,
+                  ),
+                  SizedBox(width: 10),
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        },
+      ],
     );
   }
 }
