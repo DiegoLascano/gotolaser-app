@@ -36,8 +36,9 @@ class SectionTitle extends StatelessWidget {
                       ),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ProductsScreen.create(context, tagId: tagId)),
+                          builder: (context) => ProductsScreen.create(context,
+                              tagId: tagId, title: title),
+                        ),
                       ),
                     )
                   : SizedBox(width: 0),

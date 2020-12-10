@@ -127,10 +127,8 @@ class _ProductScreenState extends State<ProductScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Detalle',
-          style: Theme.of(context).textTheme.headline4.copyWith(
-                color: AppColors.primary,
-              ),
+          'Detalles',
+          style: Theme.of(context).textTheme.headline4.copyWith(),
         ),
         // actions: [
         //   IconButton(

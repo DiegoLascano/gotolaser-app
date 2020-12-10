@@ -43,7 +43,7 @@ class WoocommerceService extends WoocommerceServiceBase {
             )
             .toList();
       }
-      // print('categories: ${categories[0].name}');
+      print('categories: ${categories[0].name}');
     } on DioError catch (e) {
       print(e.response);
     }

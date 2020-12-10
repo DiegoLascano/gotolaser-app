@@ -43,8 +43,11 @@ class CategoryCard extends StatelessWidget {
       ),
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProductsScreen.create(context,
-              categoryId: category.id.toString()),
+          builder: (context) => ProductsScreen.create(
+            context,
+            categoryId: category.id.toString(),
+            title: category.name,
+          ),
         ),
       ),
     );

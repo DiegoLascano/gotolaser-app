@@ -11,6 +11,7 @@ import 'package:go_to_laser_store/styles/app_colors.dart';
 import 'package:go_to_laser_store/widgets/common/custom_appbar_widget.dart';
 import 'package:go_to_laser_store/widgets/store/empty_content.dart';
 import 'package:go_to_laser_store/widgets/store/grid_items_builder.dart';
+import 'package:go_to_laser_store/widgets/store/grid_list_items_builder.dart';
 import 'package:go_to_laser_store/widgets/store/product_card_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -21,18 +22,21 @@ class ProductsScreen extends StatefulWidget {
     @required this.woocommerce,
     this.categoryId,
     this.tagId,
+    this.title,
     @required this.productsProvider,
   }) : super(key: key);
 
   final WoocommerceService woocommerce;
   final String categoryId;
   final String tagId;
+  final String title;
   final ProductsProvider productsProvider;
 
   static Widget create(
     BuildContext context, {
     String categoryId,
     String tagId,
+    String title,
   }) {
     final productsProvider =
         Provider.of<ProductsProvider>(context, listen: false);
@@ -45,6 +49,7 @@ class ProductsScreen extends StatefulWidget {
           categoryId: categoryId,
           tagId: tagId,
           productsProvider: productsProvider,
+          title: title,
         ),
       ),
     );
@@ -92,7 +97,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Productos',
+          widget.title ?? 'Productos',
           style: Theme.of(context).textTheme.headline4.copyWith(),
         ),
         actions: [
@@ -208,13 +213,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return Consumer<ProductsProvider>(
       builder: (context, productsProvider, child) {
         print(productsProvider.allProducts);
-        return GridItemsBuilder(
+        return GridListItemsBuilder(
           itemsList: productsProvider.allProducts,
+          scrollController: _scrollController,
           isLoading: productsProvider.getLoadProductsStatus() ==
               LoadProductsStatus.LOADING,
-          scrollController: _scrollController,
           itemBuilder: (context, product) => ProductCard(product: product),
         );
+        // return GridItemsBuilder(
+        //   itemsList: productsProvider.allProducts,
+        //   isLoading: productsProvider.getLoadProductsStatus() ==
+        //       LoadProductsStatus.LOADING,
+        //   scrollController: _scrollController,
+        //   itemBuilder: (context, product) => ProductCard(product: product),
+        // );
+
         // if (productsProvider.allProducts != null &&
         //     productsProvider.allProducts.length > 0 &&
         //     productsProvider.getLoadMoreStatus() != LoadMoreStatus.INITIAL) {
