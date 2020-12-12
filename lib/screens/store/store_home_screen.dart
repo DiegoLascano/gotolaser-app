@@ -23,7 +23,6 @@ import 'package:go_to_laser_store/widgets/store/section_title_widget.dart';
 import 'package:provider/provider.dart';
 
 // TODO: add PullToRefresh feature to this screen
-// TODO: activate AdMob service and place one or more nativeAds
 // TODO: handle error and empty content screen????
 class StoreHomeScreen extends StatefulWidget {
   const StoreHomeScreen({Key key, @required this.woocommerce})
@@ -46,8 +45,10 @@ class StoreHomeScreen extends StatefulWidget {
 }
 
 class _StoreHomeScreenState extends State<StoreHomeScreen> {
+  Future<List<Category>> categories;
+  Future<List<Product>> topSellingProducts;
+  Future<List<Product>> offerProducts;
   final _nativeAdController = NativeAdmobController();
-  double _nativeAdHeight = 0.0;
   bool _adIsLoading = false;
 
   StreamSubscription _subscription;
@@ -56,14 +57,12 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
     switch (state) {
       case AdLoadState.loading:
         setState(() {
-          _nativeAdHeight = 0.0;
           _adIsLoading = true;
         });
         break;
 
       case AdLoadState.loadCompleted:
         setState(() {
-          _nativeAdHeight = 200.0;
           _adIsLoading = false;
         });
         break;
@@ -75,6 +74,11 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
 
   @override
   void initState() {
+    categories = Future.value(widget.woocommerce.getCategories());
+    topSellingProducts = Future.value(widget.woocommerce
+        .getProducts(tagId: Config.topSellingTagId, pageSize: 6));
+    offerProducts = Future.value(
+        widget.woocommerce.getProducts(tagId: Config.offerTagId, pageSize: 6));
     _subscription = _nativeAdController.stateChanged.listen(_onStateChanged);
     super.initState();
   }
@@ -147,7 +151,7 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
         _buildProducts(Config.topSellingTagId),
         SizedBox(height: 20),
         SectionTitle(
-          title: 'Oferta',
+          title: 'En oferta',
           description: 'Mira nuestras últimas ofertas',
           linkText: 'Ver más',
           tagId: Config.offerTagId,
@@ -236,7 +240,7 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
 
   Widget _buildCategories() {
     return FutureBuilder(
-      future: widget.woocommerce.getCategories(),
+      future: categories,
       builder:
           (BuildContext context, AsyncSnapshot<List<Category>> categoriesList) {
         if (categoriesList.hasData) {
@@ -294,7 +298,7 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
 
   Widget _buildProducts(String tagId) {
     return FutureBuilder(
-      future: widget.woocommerce.getProducts(tagId: tagId, pageSize: 6),
+      future: tagId == "28" ? topSellingProducts : offerProducts,
       builder:
           (BuildContext context, AsyncSnapshot<List<Product>> productsList) {
         if (productsList.hasData) {

@@ -35,10 +35,10 @@ class GridListItemsBuilder<T> extends StatelessWidget {
   }
 
   Widget _buildContent(List<T> items) {
+    // TODO: try Gridview.builder to simplify logic
     return ListView.builder(
       itemCount: items.length,
       controller: scrollController,
-      // separatorBuilder: (_, __) => SizedBox(height: 5.0),
       itemBuilder: (context, index) {
         if (index % 2 == 0) {
           return Column(

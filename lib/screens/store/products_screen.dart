@@ -220,13 +220,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
               LoadProductsStatus.LOADING,
           itemBuilder: (context, product) => ProductCard(product: product),
         );
-        // return GridItemsBuilder(
-        //   itemsList: productsProvider.allProducts,
-        //   isLoading: productsProvider.getLoadProductsStatus() ==
-        //       LoadProductsStatus.LOADING,
-        //   scrollController: _scrollController,
-        //   itemBuilder: (context, product) => ProductCard(product: product),
-        // );
 
         // if (productsProvider.allProducts != null &&
         //     productsProvider.allProducts.length > 0 &&

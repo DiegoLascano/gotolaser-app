@@ -45,6 +45,7 @@ class CouponsHomeScreen extends StatefulWidget {
 // all related information
 
 class _CouponsHomeScreenState extends State<CouponsHomeScreen> {
+  Future<List<Coupon>> coupons;
   final _nativeAdController = NativeAdmobController();
   bool _adIsLoading = false;
 
@@ -71,6 +72,7 @@ class _CouponsHomeScreenState extends State<CouponsHomeScreen> {
 
   @override
   void initState() {
+    coupons = widget.woocommerce.getCoupons();
     _subscription = _nativeAdController.stateChanged.listen(_onStateChanged);
     super.initState();
   }
@@ -164,7 +166,7 @@ class _CouponsHomeScreenState extends State<CouponsHomeScreen> {
 
   Widget _buildContent() {
     return FutureBuilder(
-      future: widget.woocommerce.getCoupons(),
+      future: coupons,
       builder: (context, AsyncSnapshot<List<Coupon>> snapshot) {
         return ListItemsBuilder(
           snapshot: snapshot,

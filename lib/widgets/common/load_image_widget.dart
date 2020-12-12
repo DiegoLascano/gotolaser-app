@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_to_laser_store/styles/app_images.dart';
 
@@ -9,9 +10,11 @@ class LoadImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageUrl != null) {
-      return FadeInImage(
-        placeholder: AssetImage(animatedPlaceholder),
-        image: NetworkImage(imageUrl),
+      return CachedNetworkImage(
+        placeholder: (context, url) => Image(
+          image: AssetImage(animatedPlaceholder),
+        ),
+        imageUrl: imageUrl,
         fit: BoxFit.cover,
       );
     } else {

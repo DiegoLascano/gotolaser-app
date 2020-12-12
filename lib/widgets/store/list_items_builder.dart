@@ -42,8 +42,6 @@ class ListItemsBuilder<T> extends StatelessWidget {
 
   Widget _buildList(List<T> items) {
     return ListView.separated(
-      // shrinkWrap: true,
-      // physics: NeverScrollableScrollPhysics(),
       separatorBuilder: (_, __) => SizedBox(height: 10.0),
       itemCount: items.length,
       itemBuilder: (context, index) {

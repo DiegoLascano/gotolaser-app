@@ -6,7 +6,7 @@ import 'package:go_to_laser_store/widgets/store/product_thumbnail_widget.dart';
 import 'package:go_to_laser_store/widgets/store/related_thumbnail_widget.dart';
 import 'package:provider/provider.dart';
 
-class RelatedProducts extends StatelessWidget {
+class RelatedProducts extends StatefulWidget {
   const RelatedProducts({
     Key key,
     @required this.product,
@@ -28,6 +28,19 @@ class RelatedProducts extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  _RelatedProductsState createState() => _RelatedProductsState();
+}
+
+class _RelatedProductsState extends State<RelatedProducts> {
+  Future<List<Product>> relatedProducts;
+  @override
+  void initState() {
+    relatedProducts = widget.woocommerce
+        .getProducts(productsIds: widget.product.crossSellIDs);
+    super.initState();
   }
 
   @override
@@ -54,7 +67,7 @@ class RelatedProducts extends StatelessWidget {
 
   Widget _buildGrid() {
     return FutureBuilder(
-      future: woocommerce.getProducts(productsIds: product.crossSellIDs),
+      future: relatedProducts,
       builder:
           (BuildContext context, AsyncSnapshot<List<Product>> productsList) {
         if (productsList.hasData) {
